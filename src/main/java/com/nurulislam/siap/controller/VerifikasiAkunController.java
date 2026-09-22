@@ -8,11 +8,13 @@ import com.nurulislam.siap.model.StatusAkun;
 import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
 import com.nurulislam.siap.util.ProfileMenu;
+import com.nurulislam.siap.util.AvatarUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
@@ -50,6 +52,7 @@ public class VerifikasiAkunController {
     @FXML private Button btnNavCetakKartu;
     @FXML private Button btnNavLaporan;
     @FXML private StackPane avatarBox;
+    @FXML private ImageView imgAvatar;
 
     @FXML private Label labelNamaUser;
     @FXML private Label labelRoleUser;
@@ -103,6 +106,7 @@ public class VerifikasiAkunController {
         btnTolak.setOnAction(e -> handleTolak());
         btnRefresh.setOnAction(e -> muatDaftarAkun());
         ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
+        AvatarUtil.tampilkan(avatarBox, imgAvatar, labelInisialUser);
 
         muatDaftarAkun();
     }

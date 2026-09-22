@@ -10,6 +10,7 @@ import com.nurulislam.siap.model.StatusAbsensi;
 import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
 import com.nurulislam.siap.util.ProfileMenu;
+import com.nurulislam.siap.util.AvatarUtil;
 import com.nurulislam.siap.util.DatabaseConnection;
 import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
@@ -20,6 +21,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -35,6 +37,7 @@ public class DashboardController {
     @FXML private Button btnNavDashboard, btnNavVerifikasi, btnNavScanQr, btnNavDataMurid,
             btnNavDataKelas, btnNavMataPelajaran, btnNavCetakKartu, btnNavLaporan;
     @FXML private StackPane avatarBox;
+    @FXML private ImageView imgAvatar;
     @FXML private Label labelTanggal, labelNamaUser, labelRoleUser, labelInisialUser, labelHalo;
     @FXML private Label labelTotalHadir, labelIzinSakit, labelTerlambat, labelAlfa;
     @FXML private Label labelStatusDatabase;
@@ -77,6 +80,7 @@ public class DashboardController {
         btnBacaSelengkapnya.setOnAction(e -> bukaLaporan());
         linkLihatSemua.setOnAction(e -> bukaLaporan());
         ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
+        AvatarUtil.tampilkan(avatarBox, imgAvatar, labelInisialUser);
     }
 
     private void refreshDashboard() {

@@ -791,3 +791,285 @@
 .laporan-btn-hapus:hover {
     -fx-background-color: #ffd2cd;
 }
+
+/* ================================================================
+   PENGATURAN AKUN - gaya terinspirasi WhatsApp Desktop
+   ================================================================ */
+.settings-root {
+    -fx-background-color: #f6f8fa;
+    -fx-font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+.settings-sidebar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e2e6e8;
+    -fx-border-width: 0 1 0 0;
+}
+
+.settings-sidebar-header {
+    -fx-padding: 0 4 16 4;
+}
+
+.settings-back-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #64706f;
+    -fx-font-size: 26px;
+    -fx-padding: 2 8 2 8;
+    -fx-background-radius: 999;
+    -fx-cursor: hand;
+}
+
+.settings-back-button:hover {
+    -fx-background-color: #f0f2f2;
+}
+
+.settings-sidebar-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #191c1e;
+}
+
+.settings-sidebar-subtitle {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6b7076;
+}
+
+.settings-profile-card {
+    -fx-background-color: #f3f7f7;
+    -fx-background-radius: 12;
+    -fx-padding: 12;
+}
+
+.settings-sidebar-avatar {
+    -fx-background-color: #dff3f1;
+    -fx-background-radius: 999;
+    -fx-min-width: 64px;
+    -fx-min-height: 64px;
+    -fx-max-width: 64px;
+    -fx-max-height: 64px;
+}
+
+.settings-avatar-inisial {
+    -fx-text-fill: #006a65;
+    -fx-font-size: 19px;
+    -fx-font-weight: bold;
+}
+
+.settings-profile-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #191c1e;
+}
+
+.settings-profile-email {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6b7076;
+}
+
+.settings-separator {
+    -fx-padding: 14 0 8 0;
+}
+
+.settings-section-label {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #7b8584;
+    -fx-padding: 6 8 6 8;
+}
+
+.settings-menu {
+    -fx-background-color: transparent;
+    -fx-text-fill: #374241;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12 14 12 14;
+    -fx-background-radius: 9;
+    -fx-cursor: hand;
+}
+
+.settings-menu:hover {
+    -fx-background-color: #f0f2f2;
+}
+
+.settings-menu-active {
+    -fx-background-color: #e4f4f2;
+    -fx-text-fill: #006a65;
+    -fx-font-weight: bold;
+}
+
+.settings-logout {
+    -fx-background-color: #fff1ef;
+    -fx-text-fill: #b3261e;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 14 10 14;
+    -fx-background-radius: 9;
+    -fx-cursor: hand;
+}
+
+.settings-logout:hover {
+    -fx-background-color: #ffe1dd;
+}
+
+.settings-scroll,
+.settings-scroll > .viewport {
+    -fx-background-color: #f6f8fa;
+    -fx-background: #f6f8fa;
+}
+
+.settings-content {
+    -fx-padding: 2 0 24 0;
+}
+
+.settings-page-title {
+    -fx-font-size: 27px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #191c1e;
+}
+
+.settings-page-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6b7076;
+}
+
+.settings-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 14;
+    -fx-border-color: #e1e5e5;
+    -fx-border-radius: 14;
+    -fx-padding: 22;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.045), 10, 0, 0, 2);
+}
+
+.settings-card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #191c1e;
+}
+
+.settings-photo-box {
+    -fx-background-color: #edf2f2;
+    -fx-background-radius: 18;
+    -fx-border-color: #d9e1e1;
+    -fx-border-radius: 18;
+    -fx-padding: 5;
+}
+
+.settings-photo-inisial {
+    -fx-text-fill: #006a65;
+    -fx-font-size: 38px;
+    -fx-font-weight: bold;
+}
+
+.settings-profile-heading {
+    -fx-font-size: 21px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #191c1e;
+}
+
+.settings-profile-email-large {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6b7076;
+}
+
+.settings-help-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6b7076;
+    -fx-line-spacing: 2px;
+}
+
+.settings-caption {
+    -fx-font-size: 10px;
+    -fx-text-fill: #8a9291;
+}
+
+.settings-field-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4b5655;
+}
+
+.settings-text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d9dfdf;
+    -fx-border-width: 1;
+    -fx-border-radius: 9;
+    -fx-background-radius: 9;
+    -fx-padding: 10 12 10 12;
+    -fx-font-size: 13px;
+}
+
+.settings-text-field:focused {
+    -fx-border-color: #00897b;
+    -fx-effect: dropshadow(gaussian, rgba(0,137,123,0.14), 6, 0, 0, 0);
+}
+
+.settings-readonly-value {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #191c1e;
+}
+
+.settings-button-primary {
+    -fx-background-color: #006a65;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 16 10 16;
+    -fx-background-radius: 9;
+    -fx-cursor: hand;
+}
+
+.settings-button-primary:hover {
+    -fx-background-color: #005752;
+}
+
+.settings-button-secondary {
+    -fx-background-color: #eaf4f3;
+    -fx-text-fill: #006a65;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 9 14 9 14;
+    -fx-background-radius: 9;
+    -fx-cursor: hand;
+}
+
+.settings-button-secondary:hover {
+    -fx-background-color: #d9eeec;
+}
+
+.settings-button-plain {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6b7076;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 9 12 9 12;
+    -fx-background-radius: 9;
+    -fx-border-color: #d9dfdf;
+    -fx-border-radius: 9;
+    -fx-cursor: hand;
+}
+
+.settings-button-plain:hover {
+    -fx-background-color: #f2f4f4;
+}
+
+.settings-button-danger {
+    -fx-background-color: #fff1ef;
+    -fx-text-fill: #b3261e;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 9 14 9 14;
+    -fx-background-radius: 9;
+    -fx-cursor: hand;
+}
+
+.settings-button-danger:hover {
+    -fx-background-color: #ffe1dd;
+}
+
+.settings-error {
+    -fx-font-size: 12px;
+    -fx-text-fill: #b3261e;
+    -fx-font-weight: bold;
+}

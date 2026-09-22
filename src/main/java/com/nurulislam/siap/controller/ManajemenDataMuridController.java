@@ -11,11 +11,13 @@ import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.DatabaseConnection;
 import com.nurulislam.siap.util.SessionManager;
 import com.nurulislam.siap.util.ProfileMenu;
+import com.nurulislam.siap.util.AvatarUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -57,6 +59,7 @@ public class ManajemenDataMuridController {
     @FXML private Button btnNavCetakKartu;
     @FXML private Button btnNavLaporan;
     @FXML private StackPane avatarBox;
+    @FXML private ImageView imgAvatar;
 
     // --- Top bar ---
     @FXML private Label labelNamaUser;
@@ -170,6 +173,7 @@ public class ManajemenDataMuridController {
         btnBatal.setOnAction(e -> resetForm());
         btnPilihFoto.setOnAction(e -> handlePilihFoto());
         ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
+        AvatarUtil.tampilkan(avatarBox, imgAvatar, labelInisialUser);
 
         muatDaftarKelasUntukCombo();
         muatDaftarMurid();

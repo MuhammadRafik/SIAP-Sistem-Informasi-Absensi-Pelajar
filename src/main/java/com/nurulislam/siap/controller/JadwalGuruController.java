@@ -8,10 +8,12 @@ import com.nurulislam.siap.model.Role;
 import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
 import com.nurulislam.siap.util.ProfileMenu;
+import com.nurulislam.siap.util.AvatarUtil;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
+import javafx.scene.image.ImageView;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -47,6 +49,7 @@ public class JadwalGuruController {
     @FXML private Button btnNavAbsensiMapel;
     @FXML private Button btnNavLaporan;
     @FXML private StackPane avatarBox;
+    @FXML private ImageView imgAvatar;
 
     @FXML private Label labelTanggal;
     @FXML private Label labelNamaUser;
@@ -263,6 +266,7 @@ public class JadwalGuruController {
         ));
 
         ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
+        AvatarUtil.tampilkan(avatarBox, imgAvatar, labelInisialUser);
     }
 
     /** Membuka halaman Profil Saya (diakses dari menu avatar kanan atas). */

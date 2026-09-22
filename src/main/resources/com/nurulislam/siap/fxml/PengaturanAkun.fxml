@@ -14,112 +14,219 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="800.0" prefWidth="1280.0" styleClass="dashboard-root"
-            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane prefHeight="820.0" prefWidth="1280.0"
+            styleClass="settings-root"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.nurulislam.siap.controller.PengaturanAkunController">
 
+    <!-- ====================== SIDEBAR PENGATURAN ====================== -->
+    <left>
+        <VBox prefWidth="310.0" styleClass="settings-sidebar">
+            <padding>
+                <Insets top="24" right="14" bottom="20" left="14"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="12" styleClass="settings-sidebar-header">
+                <Button fx:id="btnKembali" text="‹" styleClass="settings-back-button"/>
+                <VBox spacing="1" HBox.hgrow="ALWAYS">
+                    <Label text="Pengaturan" styleClass="settings-sidebar-title"/>
+                    <Label text="Akun dan preferensi aplikasi" styleClass="settings-sidebar-subtitle"/>
+                </VBox>
+            </HBox>
+
+            <!-- Profil mini seperti header profil WhatsApp -->
+            <HBox alignment="CENTER_LEFT" spacing="12" styleClass="settings-profile-card">
+                <StackPane styleClass="settings-sidebar-avatar">
+                    <ImageView fx:id="imgFotoSidebar" fitWidth="56.0" fitHeight="56.0" preserveRatio="true" smooth="true"/>
+                    <Label fx:id="labelInisialSidebar" text="?" styleClass="settings-avatar-inisial"/>
+                </StackPane>
+                <VBox spacing="2" HBox.hgrow="ALWAYS">
+                    <Label fx:id="labelNamaSidebar" text="Pengguna" styleClass="settings-profile-name"/>
+                    <Label fx:id="labelEmailSidebar" text="-" styleClass="settings-profile-email" wrapText="true"/>
+                </VBox>
+            </HBox>
+
+            <Separator styleClass="settings-separator"/>
+
+            <Label text="PENGATURAN" styleClass="settings-section-label"/>
+
+            <VBox spacing="2">
+                <Button fx:id="btnMenuProfil" text="Profil Saya"
+                        styleClass="settings-menu" maxWidth="Infinity"/>
+                <Button fx:id="btnMenuAkun" text="Akun &amp; Keamanan"
+                        styleClass="settings-menu" maxWidth="Infinity"/>
+                <Button fx:id="btnMenuSesi" text="Sesi &amp; Aplikasi"
+                        styleClass="settings-menu" maxWidth="Infinity"/>
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <Button fx:id="btnLogout" text="Logout" styleClass="settings-logout" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <!-- ====================== DETAIL ====================== -->
     <center>
-        <ScrollPane fitToWidth="true" styleClass="dashboard-scroll">
-            <VBox styleClass="dashboard-body" spacing="20">
+        <ScrollPane fitToWidth="true" styleClass="settings-scroll">
+            <StackPane alignment="TOP_CENTER">
                 <padding>
-                    <Insets top="24" right="32" bottom="32" left="32"/>
+                    <Insets top="30" right="38" bottom="40" left="38"/>
                 </padding>
 
-                <!-- Top bar -->
-                <HBox alignment="CENTER_LEFT" spacing="16">
-                    <VBox spacing="2">
-                        <Label text="Profil Saya" styleClass="topbar-title"/>
-                        <Label text="Kelola foto, nama, dan informasi akun Anda"
-                               styleClass="greeting-caption"/>
+                <!-- ================= PROFIL ================= -->
+                <VBox fx:id="panelProfil" spacing="20" styleClass="settings-content" maxWidth="820">
+                    <VBox spacing="3">
+                        <Label text="Profil" styleClass="settings-page-title"/>
+                        <Label text="Kelola foto profil, nama, dan email yang digunakan di aplikasi."
+                               styleClass="settings-page-subtitle" wrapText="true"/>
                     </VBox>
-                    <Region HBox.hgrow="ALWAYS"/>
-                    <Button fx:id="btnKembali" text="← Kembali" styleClass="btn-secondary"/>
-                </HBox>
 
-                <!-- Foto profil -->
-                <VBox styleClass="card" spacing="14">
-                    <Label text="Foto Profil" styleClass="card-title"/>
-                    <HBox alignment="CENTER_LEFT" spacing="18">
-                        <StackPane fx:id="fotoBox" styleClass="avatar-circle" minWidth="96" minHeight="96"
-                                   maxWidth="96" maxHeight="96">
-                            <ImageView fx:id="imgFoto" fitWidth="96" fitHeight="96"
-                                       preserveRatio="false" smooth="true"/>
-                            <Label fx:id="labelInisialFoto" text="?" styleClass="avatar-text"/>
-                        </StackPane>
-                        <VBox spacing="8" HBox.hgrow="ALWAYS">
-                            <Label fx:id="labelNamaBesar" text="-" styleClass="card-title"/>
-                            <Label fx:id="labelEmailBesar" text="-" styleClass="card-subtitle"/>
-                            <HBox spacing="10">
-                                <Button fx:id="btnPilihFoto" text="Pilih Foto" styleClass="btn-secondary"/>
-                                <Button fx:id="btnHapusFoto" text="Hapus Foto" styleClass="btn-secondary"/>
-                            </HBox>
-                            <Label text="Format PNG atau JPG, ukuran file disarankan di bawah 2 MB."
-                                   styleClass="tip-text" wrapText="true"/>
+                    <VBox styleClass="settings-card" spacing="18">
+                        <Label text="Foto profil" styleClass="settings-card-title"/>
+                        <HBox alignment="CENTER_LEFT" spacing="24">
+                            <StackPane fx:id="fotoBox" styleClass="settings-photo-box"
+                                       minWidth="180" minHeight="180" maxWidth="180" maxHeight="180">
+                                <ImageView fx:id="imgFoto" fitWidth="160" fitHeight="160"
+                                           preserveRatio="true" smooth="true"/>
+                                <Label fx:id="labelInisialFoto" text="?" styleClass="settings-photo-inisial"/>
+                            </StackPane>
+
+                            <VBox spacing="8" HBox.hgrow="ALWAYS">
+                                <Label fx:id="labelNamaBesar" text="-" styleClass="settings-profile-heading"/>
+                                <Label fx:id="labelEmailBesar" text="-" styleClass="settings-profile-email-large"/>
+                                <Label text="Foto ditampilkan utuh tanpa crop. Gambar akan menyesuaikan ukuran bingkai dengan tetap mempertahankan proporsi asli."
+                                       styleClass="settings-help-text" wrapText="true"/>
+                                <HBox spacing="10">
+                                    <Button fx:id="btnPilihFoto" text="Pilih Foto" styleClass="settings-button-secondary"/>
+                                    <Button fx:id="btnHapusFoto" text="Hapus Foto" styleClass="settings-button-plain"/>
+                                </HBox>
+                                <Label text="PNG, JPG, atau JPEG • maksimal 2 MB"
+                                       styleClass="settings-caption"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="settings-card" spacing="16">
+                        <Label text="Informasi profil" styleClass="settings-card-title"/>
+
+                        <VBox spacing="6">
+                            <Label text="Nama Lengkap" styleClass="settings-field-label"/>
+                            <TextField fx:id="fieldNama" promptText="Masukkan nama lengkap"
+                                       styleClass="settings-text-field"/>
                         </VBox>
-                    </HBox>
-                </VBox>
 
-                <!-- Informasi akun -->
-                <VBox styleClass="card" spacing="14">
-                    <Label text="Informasi Akun" styleClass="card-title"/>
-                    <VBox spacing="6">
-                        <Label text="Nama Lengkap" styleClass="field-label"/>
-                        <TextField fx:id="fieldNama" promptText="Nama lengkap"
-                                   styleClass="text-field-rounded"/>
-                    </VBox>
-                    <VBox spacing="6">
-                        <Label text="Email" styleClass="field-label"/>
-                        <TextField fx:id="fieldEmail" promptText="email@contoh.sch.id"
-                                   styleClass="text-field-rounded"/>
-                    </VBox>
-                    <HBox spacing="16">
-                        <VBox spacing="6" HBox.hgrow="ALWAYS">
-                            <Label text="Role" styleClass="field-label"/>
-                            <Label fx:id="labelRole" text="-" styleClass="stat-label"/>
+                        <VBox spacing="6">
+                            <Label text="Email" styleClass="settings-field-label"/>
+                            <TextField fx:id="fieldEmail" promptText="email@contoh.com"
+                                       styleClass="settings-text-field"/>
                         </VBox>
-                        <VBox spacing="6" HBox.hgrow="ALWAYS">
-                            <Label text="Status Akun" styleClass="field-label"/>
-                            <Label fx:id="labelStatusAkun" text="-" styleClass="stat-label"/>
+
+                        <HBox spacing="20">
+                            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                <Label text="Role" styleClass="settings-field-label"/>
+                                <Label fx:id="labelRole" text="-" styleClass="settings-readonly-value"/>
+                            </VBox>
+                            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                <Label text="Status Akun" styleClass="settings-field-label"/>
+                                <Label fx:id="labelStatusAkun" text="-" styleClass="settings-readonly-value"/>
+                            </VBox>
+                        </HBox>
+
+                        <Label fx:id="labelProfilError" text="" styleClass="settings-error" wrapText="true"/>
+
+                        <HBox alignment="CENTER_RIGHT">
+                            <Button fx:id="btnSimpanProfil" text="Simpan Perubahan"
+                                    styleClass="settings-button-primary"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <!-- ================= AKUN & KEAMANAN ================= -->
+                <VBox fx:id="panelAkun" spacing="20" styleClass="settings-content" maxWidth="820"
+                      visible="false" managed="false">
+                    <VBox spacing="3">
+                        <Label text="Akun &amp; Keamanan" styleClass="settings-page-title"/>
+                        <Label text="Ubah password akun Anda secara berkala untuk menjaga keamanan akses."
+                               styleClass="settings-page-subtitle" wrapText="true"/>
+                    </VBox>
+
+                    <VBox styleClass="settings-card" spacing="16">
+                        <Label text="Ubah Password" styleClass="settings-card-title"/>
+
+                        <VBox spacing="6">
+                            <Label text="Password Lama" styleClass="settings-field-label"/>
+                            <PasswordField fx:id="fieldPasswordLama" promptText="Masukkan password lama"
+                                           styleClass="settings-text-field"/>
                         </VBox>
-                    </HBox>
-                    <Label fx:id="labelProfilError" styleClass="error-label" wrapText="true"/>
-                    <Button fx:id="btnSimpanProfil" text="Simpan Perubahan"
-                            styleClass="btn-primary" maxWidth="Infinity"/>
+
+                        <VBox spacing="6">
+                            <Label text="Password Baru" styleClass="settings-field-label"/>
+                            <PasswordField fx:id="fieldPasswordBaru" promptText="Minimal 6 karakter"
+                                           styleClass="settings-text-field"/>
+                        </VBox>
+
+                        <VBox spacing="6">
+                            <Label text="Konfirmasi Password Baru" styleClass="settings-field-label"/>
+                            <PasswordField fx:id="fieldKonfirmasi" promptText="Ulangi password baru"
+                                           styleClass="settings-text-field"/>
+                        </VBox>
+
+                        <Label text="Gunakan password yang berbeda dari password sebelumnya."
+                               styleClass="settings-help-text" wrapText="true"/>
+                        <Label fx:id="labelError" text="" styleClass="settings-error" wrapText="true"/>
+
+                        <HBox alignment="CENTER_RIGHT">
+                            <Button fx:id="btnSimpanPassword" text="Simpan Password"
+                                    styleClass="settings-button-primary"/>
+                        </HBox>
+                    </VBox>
                 </VBox>
 
-                <!-- Ubah password -->
-                <VBox styleClass="card" spacing="14">
-                    <Label text="Ubah Password" styleClass="card-title"/>
-                    <VBox spacing="6">
-                        <Label text="Password Lama" styleClass="field-label"/>
-                        <PasswordField fx:id="fieldPasswordLama" promptText="Masukkan password lama"
-                                       styleClass="text-field-rounded"/>
+                <!-- ================= SESI ================= -->
+                <VBox fx:id="panelSesi" spacing="20" styleClass="settings-content" maxWidth="820"
+                      visible="false" managed="false">
+                    <VBox spacing="3">
+                        <Label text="Sesi &amp; Aplikasi" styleClass="settings-page-title"/>
+                        <Label text="Informasi akun yang sedang digunakan pada komputer ini."
+                               styleClass="settings-page-subtitle" wrapText="true"/>
                     </VBox>
-                    <VBox spacing="6">
-                        <Label text="Password Baru" styleClass="field-label"/>
-                        <PasswordField fx:id="fieldPasswordBaru" promptText="Minimal 6 karakter"
-                                       styleClass="text-field-rounded"/>
-                    </VBox>
-                    <VBox spacing="6">
-                        <Label text="Konfirmasi Password Baru" styleClass="field-label"/>
-                        <PasswordField fx:id="fieldKonfirmasi" promptText="Ulangi password baru"
-                                       styleClass="text-field-rounded"/>
-                    </VBox>
-                    <Label fx:id="labelError" styleClass="error-label" wrapText="true"/>
-                    <Button fx:id="btnSimpanPassword" text="Simpan Password"
-                            styleClass="btn-primary" maxWidth="Infinity"/>
-                </VBox>
 
-                <!-- Keluar -->
-                <VBox styleClass="card" spacing="10">
-                    <Label text="Sesi" styleClass="card-title"/>
-                    <Label text="Keluar dari aplikasi dan kembali ke halaman masuk."
-                           styleClass="card-subtitle" wrapText="true"/>
-                    <Separator/>
-                    <Button fx:id="btnLogout" text="Logout" styleClass="btn-danger"
-                            maxWidth="Infinity"/>
+                    <VBox styleClass="settings-card" spacing="16">
+                        <Label text="Akun aktif" styleClass="settings-card-title"/>
+                        <HBox spacing="20">
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="Nama" styleClass="settings-field-label"/>
+                                <Label fx:id="labelNamaSesi" text="-" styleClass="settings-readonly-value"/>
+                            </VBox>
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="Email" styleClass="settings-field-label"/>
+                                <Label fx:id="labelEmailSesi" text="-" styleClass="settings-readonly-value"/>
+                            </VBox>
+                        </HBox>
+                        <HBox spacing="20">
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="Role" styleClass="settings-field-label"/>
+                                <Label fx:id="labelRoleSesi" text="-" styleClass="settings-readonly-value"/>
+                            </VBox>
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label text="Status" styleClass="settings-field-label"/>
+                                <Label fx:id="labelStatusSesi" text="-" styleClass="settings-readonly-value"/>
+                            </VBox>
+                        </HBox>
+
+                        <Separator/>
+                        <Label text="Logout akan mengakhiri sesi akun dan mengembalikan Anda ke halaman login."
+                               styleClass="settings-help-text" wrapText="true"/>
+                        <HBox spacing="10">
+                            <Button fx:id="btnSesiKembali" text="Kembali ke Dashboard"
+                                    styleClass="settings-button-secondary"/>
+                            <Button fx:id="btnSesiLogout" text="Logout"
+                                    styleClass="settings-button-danger"/>
+                        </HBox>
+                    </VBox>
                 </VBox>
-            </VBox>
+            </StackPane>
         </ScrollPane>
     </center>
 </BorderPane>

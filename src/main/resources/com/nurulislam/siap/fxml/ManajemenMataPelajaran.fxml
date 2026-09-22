@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -79,6 +80,7 @@
                             <Label fx:id="labelRoleUser" text="School Administrator" styleClass="user-role"/>
                         </VBox>
                         <StackPane fx:id="avatarBox" styleClass="avatar-circle">
+                        <ImageView fx:id="imgAvatar" fitWidth="40" fitHeight="40" preserveRatio="false"/>
                             <Label fx:id="labelInisialUser" text="A" styleClass="avatar-text"/>
                         </StackPane>
                     </HBox>

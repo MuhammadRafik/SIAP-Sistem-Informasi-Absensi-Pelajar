@@ -11,10 +11,12 @@ import com.nurulislam.siap.model.Statusmurid;
 import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
 import com.nurulislam.siap.util.ProfileMenu;
+import com.nurulislam.siap.util.AvatarUtil;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.*;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
@@ -63,6 +65,7 @@ public class DataKelasDetailController {
     @FXML private Button btnNavCetakKartu;
     @FXML private Button btnNavLaporan;
     @FXML private StackPane avatarBox;
+    @FXML private ImageView imgAvatar;
 
     @FXML private Label labelNamaUser;
     @FXML private Label labelRoleUser;
@@ -118,6 +121,7 @@ public class DataKelasDetailController {
         btnUbahMurid.setOnAction(e -> bukaEditMurid());
         btnKembali.setOnAction(e -> bukaDataKelas());
         ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
+        AvatarUtil.tampilkan(avatarBox, imgAvatar, labelInisialUser);
 
         // Sidebar kelas dibuat sebagai submenu yang dapat dibuka/tutup.
         setSubKelasTerbuka(true);

@@ -6,10 +6,12 @@ import com.nurulislam.siap.model.*;
 import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
 import com.nurulislam.siap.util.ProfileMenu;
+import com.nurulislam.siap.util.AvatarUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
+import javafx.scene.image.ImageView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -57,6 +59,7 @@ public class ManajemenMataPelajaranController {
     @FXML private Button btnNavCetakKartu;
     @FXML private Button btnNavLaporan;
     @FXML private StackPane avatarBox;
+    @FXML private ImageView imgAvatar;
 
     // --- Top bar ---
     @FXML private Label labelNamaUser;
@@ -171,6 +174,7 @@ public class ManajemenMataPelajaranController {
         btnBatalJadwal.setOnAction(e -> resetFormJadwal());
 
         ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
+        AvatarUtil.tampilkan(avatarBox, imgAvatar, labelInisialUser);
 
         muatDaftarPendukungForm();
         muatSemuaData();

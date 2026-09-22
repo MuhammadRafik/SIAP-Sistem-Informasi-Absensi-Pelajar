@@ -13,6 +13,7 @@ import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.DatabaseConnection;
 import com.nurulislam.siap.util.SessionManager;
 import com.nurulislam.siap.util.ProfileMenu;
+import com.nurulislam.siap.util.AvatarUtil;
 import javafx.application.Platform;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -20,6 +21,7 @@ import javafx.animation.Timeline;
 import javafx.util.Duration;
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
+import javafx.scene.image.ImageView;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -44,6 +46,7 @@ public class DashboardGuruController {
     private volatile boolean sedangMemuatUlangData = false;
     @FXML private Button btnNavBeranda, btnNavJadwal, btnNavAbsensiMapel, btnNavLaporan;
     @FXML private StackPane avatarBox;
+    @FXML private ImageView imgAvatar;
     @FXML private Label labelTanggal, labelNamaUser, labelRoleUser, labelInisialUser, labelHalo;
     @FXML private Label labelJumlahKelas, labelJumlahSiswa, labelSesiBerjalan, labelSesiSelesai;
     @FXML private Label labelStatusDatabase;
@@ -97,6 +100,7 @@ public class DashboardGuruController {
         btnLihatLaporan.setOnAction(e -> bukaLaporan());
         btnPengaturanAkun.setOnAction(e -> buka("/com/nurulislam/siap/fxml/PengaturanAkun.fxml", "Profil Saya"));
         ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
+        AvatarUtil.tampilkan(avatarBox, imgAvatar, labelInisialUser);
     
         mulaiPemantauanDatabase();}
 

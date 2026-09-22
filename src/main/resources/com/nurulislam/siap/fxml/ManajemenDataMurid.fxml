@@ -81,6 +81,7 @@
                             <Label fx:id="labelRoleUser" text="School Administrator" styleClass="user-role"/>
                         </VBox>
                         <StackPane fx:id="avatarBox" styleClass="avatar-circle">
+                        <ImageView fx:id="imgAvatar" fitWidth="40" fitHeight="40" preserveRatio="false"/>
                             <Label fx:id="labelInisialUser" text="A" styleClass="avatar-text"/>
                         </StackPane>
                     </HBox>
