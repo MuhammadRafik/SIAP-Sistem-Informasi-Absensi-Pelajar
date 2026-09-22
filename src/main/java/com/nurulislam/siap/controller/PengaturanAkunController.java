@@ -16,7 +16,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -36,6 +38,7 @@ import java.util.Optional;
 public class PengaturanAkunController {
 
     @FXML private ImageView imgFoto;
+    @FXML private StackPane fotoBox;
     @FXML private Label labelInisialFoto;
     @FXML private Label labelNamaBesar;
     @FXML private Label labelEmailBesar;
@@ -73,9 +76,17 @@ public class PengaturanAkunController {
         labelError.setText("");
         labelProfilError.setText("");
 
-        // Potong pratinjau foto menjadi lingkaran mengikuti bingkai avatar.
+        // Kunci ukuran bingkai: foto dipaksa 96x96 di kode (bukan hanya FXML)
+        // dan bingkai diberi klip keras 96x96 agar tidak ada piksel yang bisa
+        // meluber keluar card (StackPane tidak memotong anaknya secara bawaan).
         if (imgFoto != null) {
+            imgFoto.setFitWidth(96);
+            imgFoto.setFitHeight(96);
+            imgFoto.setPreserveRatio(false);
             imgFoto.setClip(new Circle(48, 48, 48));
+        }
+        if (fotoBox != null) {
+            fotoBox.setClip(new Rectangle(96, 96));
         }
 
         muatDataAkun();

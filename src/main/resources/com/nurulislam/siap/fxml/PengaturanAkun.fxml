@@ -40,7 +40,7 @@
                 <VBox styleClass="card" spacing="14">
                     <Label text="Foto Profil" styleClass="card-title"/>
                     <HBox alignment="CENTER_LEFT" spacing="18">
-                        <StackPane styleClass="avatar-circle" minWidth="96" minHeight="96"
+                        <StackPane fx:id="fotoBox" styleClass="avatar-circle" minWidth="96" minHeight="96"
                                    maxWidth="96" maxHeight="96">
                             <ImageView fx:id="imgFoto" fitWidth="96" fitHeight="96"
                                        preserveRatio="false" smooth="true"/>
