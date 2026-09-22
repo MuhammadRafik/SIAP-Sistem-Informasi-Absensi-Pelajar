@@ -13,6 +13,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.*;
@@ -68,12 +70,10 @@ public class VerifikasiAkunController {
     @FXML private TableColumn<Pengguna, String> kolomNama;
     @FXML private TableColumn<Pengguna, String> kolomEmail;
     @FXML private TableColumn<Pengguna, String> kolomRole;
+    @FXML private TableColumn<Pengguna, String> kolomStatus;
     @FXML private TableColumn<Pengguna, String> kolomTanggalDaftar;
+    @FXML private TableColumn<Pengguna, Void> kolomAksi;
     @FXML private Label errorLabel;
-    @FXML private Button btnVerifikasi;
-    @FXML private Button btnTolak;
-    @FXML private Button btnNonaktifkan;
-    @FXML private Button btnAktifkanKembali;
     @FXML private Button btnRefresh;
 
     private static final DateTimeFormatter FORMAT_TANGGAL = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
@@ -101,19 +101,10 @@ public class VerifikasiAkunController {
         siapkanFilterPeran();
         siapkanTabel();
 
-        tabelAkun.getSelectionModel().selectedItemProperty().addListener((obs, lama, baru) -> {
-            perbaruiTombolAksi();
-        });
-
-        btnVerifikasi.setOnAction(e -> handleVerifikasi());
-        btnTolak.setOnAction(e -> handleTolak());
-        btnNonaktifkan.setOnAction(e -> handleNonaktifkan());
-        btnAktifkanKembali.setOnAction(e -> handleAktifkanKembali());
         btnRefresh.setOnAction(e -> muatDaftarAkun());
         ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
         AvatarUtil.tampilkan(avatarBox, imgAvatar, labelInisialUser);
 
-        perbaruiTombolAksi();
         muatDaftarAkun();
     }
 
@@ -170,7 +161,6 @@ public class VerifikasiAkunController {
                 filterStatusAktif = StatusAkun.MENUNGGU_VERIFIKASI;
             }
             tabelAkun.getSelectionModel().clearSelection();
-            perbaruiTombolAksi();
             muatDaftarAkun();
         });
 
@@ -184,33 +174,6 @@ public class VerifikasiAkunController {
                 tab.getStyleClass().add("filter-tab-active");
             }
         }
-    }
-
-    /**
-     * Menampilkan tombol aksi sesuai tab status aktif dan mengaktifkan/
-     * menonaktifkannya sesuai ada tidaknya baris terpilih.
-     */
-    private void perbaruiTombolAksi() {
-        boolean adaTerpilih = tabelAkun.getSelectionModel().getSelectedItem() != null;
-
-        boolean tabMenunggu = filterStatusAktif == StatusAkun.MENUNGGU_VERIFIKASI;
-        boolean tabAktif = filterStatusAktif == StatusAkun.AKTIF;
-
-        btnVerifikasi.setVisible(tabMenunggu);
-        btnVerifikasi.setManaged(tabMenunggu);
-        btnTolak.setVisible(tabMenunggu);
-        btnTolak.setManaged(tabMenunggu);
-
-        btnNonaktifkan.setVisible(tabAktif);
-        btnNonaktifkan.setManaged(tabAktif);
-
-        btnAktifkanKembali.setVisible(!tabMenunggu && !tabAktif);
-        btnAktifkanKembali.setManaged(!tabMenunggu && !tabAktif);
-
-        btnVerifikasi.setDisable(!adaTerpilih);
-        btnTolak.setDisable(!adaTerpilih);
-        btnNonaktifkan.setDisable(!adaTerpilih);
-        btnAktifkanKembali.setDisable(!adaTerpilih);
     }
 
     private void siapkanFilterPeran() {
@@ -256,13 +219,111 @@ public class VerifikasiAkunController {
         kolomEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         kolomRole.setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().getRole().getLabel()));
+        kolomStatus.setCellValueFactory(data ->
+                new SimpleStringProperty(labelStatus(data.getValue().getStatusAkun())));
         kolomTanggalDaftar.setCellValueFactory(data -> {
             var createdAt = data.getValue().getCreatedAt();
             return new SimpleStringProperty(createdAt == null ? "-" : createdAt.format(FORMAT_TANGGAL));
         });
 
+        kolomStatus.setCellFactory(col -> new TableCell<>() {
+            private final Label badge = new Label();
+            {
+                badge.getStyleClass().add("status-badge");
+                setAlignment(Pos.CENTER);
+                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            }
+
+            @Override
+            protected void updateItem(String teks, boolean empty) {
+                super.updateItem(teks, empty);
+                if (empty || teks == null) {
+                    setGraphic(null);
+                    return;
+                }
+                badge.setText(teks);
+                badge.getStyleClass().removeAll(
+                        "status-badge-hadir", "status-badge-alfa", "status-badge-izin");
+                if ("Aktif".equals(teks)) {
+                    badge.getStyleClass().add("status-badge-hadir");
+                } else if ("Nonaktif".equals(teks)) {
+                    badge.getStyleClass().add("status-badge-alfa");
+                } else {
+                    badge.getStyleClass().add("status-badge-izin");
+                }
+                setGraphic(badge);
+            }
+        });
+
+        kolomAksi.setCellFactory(col -> new TableCell<>() {
+            private final Button btnA = new Button();
+            private final Button btnB = new Button();
+            private final HBox box = new HBox(6, btnA, btnB);
+
+            {
+                box.setAlignment(Pos.CENTER);
+                btnA.setStyle("-fx-font-size: 11px; -fx-padding: 6 9;");
+                btnB.setStyle("-fx-font-size: 11px; -fx-padding: 6 9;");
+            }
+
+            private Pengguna barisIni() {
+                int idx = getIndex();
+                if (idx < 0 || idx >= getTableView().getItems().size()) {
+                    return null;
+                }
+                return getTableView().getItems().get(idx);
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                    return;
+                }
+                Pengguna row = barisIni();
+                if (row == null) {
+                    setGraphic(null);
+                    return;
+                }
+                box.getChildren().clear();
+                if (filterStatusAktif == StatusAkun.MENUNGGU_VERIFIKASI) {
+                    btnA.setText("Verifikasi");
+                    btnA.setStyle("-fx-font-size: 11px; -fx-padding: 6 9; -fx-background-color: #006a65; -fx-text-fill: white; -fx-font-weight: bold;");
+                    btnA.setOnAction(e -> verifikasiAkun(row));
+                    btnB.setText("Tolak");
+                    btnB.setStyle("-fx-font-size: 11px; -fx-padding: 6 9; -fx-background-color: #d64545; -fx-text-fill: white; -fx-font-weight: bold;");
+                    btnB.setOnAction(e -> tolakAkun(row));
+                    box.getChildren().addAll(btnA, btnB);
+                } else if (filterStatusAktif == StatusAkun.AKTIF) {
+                    btnA.setText("Nonaktifkan");
+                    btnA.setStyle("-fx-font-size: 11px; -fx-padding: 6 9; -fx-background-color: #d64545; -fx-text-fill: white; -fx-font-weight: bold;");
+                    btnA.setOnAction(e -> nonaktifkanAkun(row));
+                    box.getChildren().add(btnA);
+                } else {
+                    btnA.setText("Aktifkan");
+                    btnA.setStyle("-fx-font-size: 11px; -fx-padding: 6 9; -fx-background-color: #006a65; -fx-text-fill: white; -fx-font-weight: bold;");
+                    btnA.setOnAction(e -> aktifkanAkun(row));
+                    box.getChildren().add(btnA);
+                }
+                setGraphic(box);
+            }
+        });
+
+        // Kolom mengisi penuh lebar tabel sehingga tidak ada kolom hantu di kanan.
+        tabelAkun.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS);
         tabelAkun.setItems(daftarTampil);
         tabelAkun.setPlaceholder(new Label("Tidak ada akun yang menunggu verifikasi."));
+    }
+
+    private String labelStatus(StatusAkun status) {
+        if (status == StatusAkun.AKTIF) {
+            return "Aktif";
+        }
+        if (status == StatusAkun.NONAKTIF) {
+            return "Nonaktif";
+        }
+        return "Menunggu";
     }
 
     private void muatDaftarAkun() {
@@ -301,8 +362,7 @@ public class VerifikasiAkunController {
         tabelAkun.setPlaceholder(new Label(statusLabel));
     }
 
-    private void handleVerifikasi() {
-        Pengguna terpilih = tabelAkun.getSelectionModel().getSelectedItem();
+    private void verifikasiAkun(Pengguna terpilih) {
         if (terpilih == null) {
             return;
         }
@@ -320,8 +380,7 @@ public class VerifikasiAkunController {
         }
     }
 
-    private void handleTolak() {
-        Pengguna terpilih = tabelAkun.getSelectionModel().getSelectedItem();
+    private void tolakAkun(Pengguna terpilih) {
         if (terpilih == null) {
             return;
         }
@@ -347,20 +406,7 @@ public class VerifikasiAkunController {
         }
     }
 
-    private void ubahStatus(Pengguna pengguna, StatusAkun statusBaru) {
-        try {
-            penggunaDAO.updateStatusAkun(pengguna.getPenggunaId(), statusBaru);
-            semuaAkun.remove(pengguna);
-            terapkanFilter();
-            errorLabel.setText("");
-        } catch (SQLException e) {
-            errorLabel.setText("Gagal memperbarui status akun. Coba lagi.");
-            System.err.println("[VerifikasiAkunController] SQLException: " + e.getMessage());
-        }
-    }
-
-    private void handleNonaktifkan() {
-        Pengguna terpilih = tabelAkun.getSelectionModel().getSelectedItem();
+    private void nonaktifkanAkun(Pengguna terpilih) {
         if (terpilih == null) {
             return;
         }
@@ -378,8 +424,7 @@ public class VerifikasiAkunController {
         }
     }
 
-    private void handleAktifkanKembali() {
-        Pengguna terpilih = tabelAkun.getSelectionModel().getSelectedItem();
+    private void aktifkanAkun(Pengguna terpilih) {
         if (terpilih == null) {
             return;
         }
@@ -394,6 +439,18 @@ public class VerifikasiAkunController {
         Optional<ButtonType> jawaban = konfirmasi.showAndWait();
         if (jawaban.isPresent() && jawaban.get() == ButtonType.OK) {
             ubahStatus(terpilih, StatusAkun.AKTIF);
+        }
+    }
+
+    private void ubahStatus(Pengguna pengguna, StatusAkun statusBaru) {
+        try {
+            penggunaDAO.updateStatusAkun(pengguna.getPenggunaId(), statusBaru);
+            semuaAkun.remove(pengguna);
+            terapkanFilter();
+            errorLabel.setText("");
+        } catch (SQLException e) {
+            errorLabel.setText("Gagal memperbarui status akun. Coba lagi.");
+            System.err.println("[VerifikasiAkunController] SQLException: " + e.getMessage());
         }
     }
 

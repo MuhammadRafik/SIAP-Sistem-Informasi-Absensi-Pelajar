@@ -82,14 +82,16 @@
                     </StackPane>
                 </HBox>
 
-                <!-- Tab status: Menunggu Verifikasi / Terverifikasi / Nonaktif -->
-                <HBox spacing="8" styleClass="filter-tab-group">
+                <!-- Baris 1: tab status + muat ulang -->
+                <HBox spacing="8" styleClass="filter-tab-group" alignment="CENTER_LEFT">
                     <ToggleButton fx:id="tabStatusMenunggu" text="Menunggu Verifikasi" styleClass="filter-tab, filter-tab-active"/>
                     <ToggleButton fx:id="tabStatusTerverifikasi" text="Terverifikasi" styleClass="filter-tab"/>
                     <ToggleButton fx:id="tabStatusNonaktif" text="Nonaktif" styleClass="filter-tab"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnRefresh" text="Muat Ulang" styleClass="btn-secondary"/>
                 </HBox>
 
-                <!-- Filter peran -->
+                <!-- Baris 2: filter peran + jumlah -->
                 <HBox spacing="8" styleClass="filter-tab-group">
                     <ToggleButton fx:id="tabSemua" text="Semua" styleClass="filter-tab, filter-tab-active"/>
                     <ToggleButton fx:id="tabGuru" text="Guru Mata Pelajaran" styleClass="filter-tab"/>
@@ -104,23 +106,14 @@
                 <VBox styleClass="card" spacing="14" VBox.vgrow="ALWAYS">
                     <TableView fx:id="tabelAkun" styleClass="tabel-akun" VBox.vgrow="ALWAYS" prefHeight="380">
                         <columns>
-                            <TableColumn fx:id="kolomNama" text="Nama" prefWidth="220"/>
-                            <TableColumn fx:id="kolomEmail" text="Email" prefWidth="240"/>
-                            <TableColumn fx:id="kolomRole" text="Peran" prefWidth="170"/>
-                            <TableColumn fx:id="kolomTanggalDaftar" text="Tanggal Daftar" prefWidth="160"/>
+                            <TableColumn fx:id="kolomNama" text="Nama" prefWidth="200"/>
+                            <TableColumn fx:id="kolomEmail" text="Email" prefWidth="230"/>
+                            <TableColumn fx:id="kolomRole" text="Peran" prefWidth="150"/>
+                            <TableColumn fx:id="kolomStatus" text="Status" prefWidth="130"/>
+                            <TableColumn fx:id="kolomTanggalDaftar" text="Tanggal Daftar" prefWidth="150"/>
+                            <TableColumn fx:id="kolomAksi" text="Aksi" prefWidth="210"/>
                         </columns>
                     </TableView>
-
-                    <HBox alignment="CENTER_RIGHT" spacing="10">
-                        <Button fx:id="btnRefresh" text="Muat Ulang" styleClass="btn-secondary"/>
-                        <!-- Aksi tab "Menunggu Verifikasi" -->
-                        <Button fx:id="btnTolak" text="Tolak" styleClass="btn-danger"/>
-                        <Button fx:id="btnVerifikasi" text="Verifikasi" styleClass="btn-primary"/>
-                        <!-- Aksi tab "Terverifikasi" -->
-                        <Button fx:id="btnNonaktifkan" text="Nonaktifkan" styleClass="btn-danger" visible="false" managed="false"/>
-                        <!-- Aksi tab "Nonaktif" -->
-                        <Button fx:id="btnAktifkanKembali" text="Aktifkan Kembali" styleClass="btn-primary" visible="false" managed="false"/>
-                    </HBox>
                 </VBox>
             </VBox>
         </ScrollPane>
