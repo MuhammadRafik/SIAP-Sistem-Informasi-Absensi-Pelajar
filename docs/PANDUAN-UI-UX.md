@@ -57,7 +57,14 @@ oranye `#ffe9df`, merah `#ffdad6`.
 - Jam: `HH:mm`. Sapaan/tanggal panjang: `d MMMM yyyy` locale `id-ID`.
 - Input jam manual tetap memakai `HH.mm` sesuai hint di dialognya.
 
-## 6. Halaman baru (checklist)
+## 6. Polish global (otomatis via `style.css`)
+
+- Tombol nonaktif pudar (`:disabled`), input fokus bergaris teal.
+- Tabel `tabel-akun`: header terang, hover baris, seleksi teal, teks tetap gelap.
+- Scrollbar ramping; menu popup avatar + tooltip + dialog konfirmasi mengikuti tema.
+- Jangan menambah style inline di FXML kecuali nilai dinamis dari kode.
+
+## 7. Halaman baru (checklist)
 
 - [ ] Ikut shell sidebar + topbar standar (avatar `avatarBox` + `imgAvatar`).
 - [ ] Daftarkan di `SceneManager` dan pasang `ProfileMenu` + `AvatarUtil`.

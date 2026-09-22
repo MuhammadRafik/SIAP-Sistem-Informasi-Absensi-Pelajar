@@ -1049,3 +1049,186 @@
     -fx-text-fill: #b3261e;
     -fx-font-weight: bold;
 }
+
+/* ================================================================
+   GLOBAL POLISH - status universal (nonaktifkan, fokus, tabel,
+   scrollbar, menu popup, tooltip, dialog). Berlaku di semua halaman.
+   ================================================================ */
+
+/* Tombol nonaktif terlihat pudar agar jelas tidak bisa diklik. */
+.btn-primary:disabled,
+.btn-secondary:disabled,
+.btn-danger:disabled,
+.quick-action-btn:disabled,
+.btn-on-announcement:disabled {
+    -fx-opacity: 0.45;
+    -fx-cursor: default;
+}
+
+/* Fokus input: garis teal agar posisi kursor jelas. */
+.text-field-rounded:focused,
+.combo-rounded:focused {
+    -fx-border-color: #20b2aa;
+}
+
+/* --- Tabel modern: header bersih, baris hover & seleksi teal --- */
+
+.tabel-akun:focused {
+    -fx-background-insets: 0;
+}
+
+.tabel-akun .column-header-background {
+    -fx-background-color: #f4f6f6;
+    -fx-background-radius: 8 8 0 0;
+    -fx-background-insets: 0;
+}
+
+.tabel-akun .column-header-background .filler,
+.tabel-akun .filler {
+    -fx-background-color: transparent;
+}
+
+.tabel-akun .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #e1e2e4 transparent;
+    -fx-padding: 8 10 8 10;
+}
+
+.tabel-akun .column-header .label {
+    -fx-text-fill: #3c4948;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.tabel-akun .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #f0f1f3 transparent;
+}
+
+.tabel-akun .table-row-cell:hover {
+    -fx-background-color: #f2faf9;
+}
+
+.tabel-akun .table-row-cell:selected {
+    -fx-background-color: #dff3f1;
+}
+
+.tabel-akun .table-row-cell:selected .table-cell {
+    -fx-text-fill: #003f3c;
+}
+
+/* --- Scrollbar ramping --- */
+
+.scroll-bar:horizontal,
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-padding: 2;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #d4d7da;
+    -fx-background-radius: 999;
+}
+
+.scroll-bar:horizontal .thumb:hover,
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #20b2aa;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0;
+}
+
+/* --- Menu popup avatar (Profil Saya | Logout) --- */
+
+.context-menu {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #e1e2e4;
+    -fx-border-radius: 10;
+    -fx-padding: 6;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 12, 0, 0, 3);
+}
+
+.context-menu .separator .line {
+    -fx-border-color: #eef0f0;
+}
+
+.menu-item {
+    -fx-padding: 8 16 8 16;
+    -fx-background-radius: 6;
+}
+
+.menu-item .label {
+    -fx-text-fill: #191c1e;
+    -fx-font-size: 13px;
+}
+
+.menu-item:focused {
+    -fx-background-color: #e6f5f4;
+}
+
+.menu-item:focused .label {
+    -fx-text-fill: #006a65;
+}
+
+.tooltip {
+    -fx-background-color: #191c1e;
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-background-radius: 6;
+    -fx-padding: 6 10 6 10;
+}
+
+/* --- Dialog konfirmasi & informasi --- */
+
+.dialog-pane {
+    -fx-background-color: white;
+}
+
+.dialog-pane:header .header-panel {
+    -fx-background-color: #e6f5f4;
+}
+
+.dialog-pane .label {
+    -fx-text-fill: #191c1e;
+}
+
+.dialog-pane .button {
+    -fx-background-color: #006a65;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 8 20 8 20;
+    -fx-cursor: hand;
+}
+
+.dialog-pane .button:hover {
+    -fx-background-color: #20b2aa;
+}
+
+.dialog-pane .button:cancel {
+    -fx-background-color: white;
+    -fx-text-fill: #191c1e;
+    -fx-border-color: #e1e2e4;
+    -fx-border-radius: 8;
+}
+
+.dialog-pane .button:cancel:hover {
+    -fx-background-color: #f0f1f3;
+}
