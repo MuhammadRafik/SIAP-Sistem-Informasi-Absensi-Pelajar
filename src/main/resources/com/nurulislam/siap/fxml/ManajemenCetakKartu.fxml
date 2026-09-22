@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="800.0" prefWidth="1280.0" styleClass="dashboard-root"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.nurulislam.siap.controller.ManajemenCetakKartuController">
+
+    <!-- ================= Sidebar kiri ================= -->
+    <left>
+        <VBox prefWidth="240.0" styleClass="sidebar" spacing="4">
+            <padding>
+                <Insets top="20" right="16" bottom="20" left="16"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <padding>
+                    <Insets bottom="20" top="4"/>
+                </padding>
+                <StackPane styleClass="brand-icon">
+                    <Label text="S" styleClass="brand-icon-text"/>
+                </StackPane>
+                <VBox spacing="1">
+                    <Label text="SIAP" styleClass="sidebar-brand"/>
+                    <Label text="School Admin System" styleClass="sidebar-brand-sub"/>
+                </VBox>
+            </HBox>
+
+            <Button fx:id="btnNavDashboard" text="Dashboard" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavVerifikasi" text="Verifikasi Akun" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavScanQr" text="Scan QR" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavDataMurid" text="Data Murid" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavDataKelas" text="Data Kelas" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavMataPelajaran" text="Mata Pelajaran" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavCetakKartu" text="Cetak Kartu Pelajar" styleClass="nav-item, nav-item-active" maxWidth="Infinity"/>
+            <Button fx:id="btnNavLaporan" text="Laporan" styleClass="nav-item" maxWidth="Infinity"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <VBox styleClass="system-status-box" spacing="4">
+                <Label text="System Status: Active" styleClass="system-status-text"/>
+            </VBox>
+
+            <Hyperlink fx:id="linkLogout" text="Logout" styleClass="link-logout"/>
+        </VBox>
+    </left>
+
+    <!-- ================= Konten utama ================= -->
+    <center>
+        <HBox>
+            <!-- Kolom kiri: filter + tabel murid -->
+            <ScrollPane fitToWidth="true" styleClass="dashboard-scroll" HBox.hgrow="ALWAYS">
+                <VBox styleClass="dashboard-body" spacing="20">
+                    <padding>
+                        <Insets top="24" right="24" bottom="32" left="32"/>
+                    </padding>
+
+                    <!-- Top bar -->
+                    <HBox alignment="CENTER_LEFT" spacing="16">
+                        <VBox spacing="2">
+                            <Label text="Cetak Kartu Pelajar" styleClass="topbar-title"/>
+                            <Label text="Pilih murid untuk dibuatkan kartu pelajar berisi QR Code absensi"
+                                   styleClass="greeting-caption"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <VBox alignment="CENTER_RIGHT" spacing="1">
+                            <Label fx:id="labelNamaUser" text="Admin User" styleClass="user-name"/>
+                            <Label fx:id="labelRoleUser" text="School Administrator" styleClass="user-role"/>
+                        </VBox>
+                        <StackPane styleClass="avatar-circle">
+                            <Label fx:id="labelInisialUser" text="A" styleClass="avatar-text"/>
+                        </StackPane>
+                    </HBox>
+
+                    <Label fx:id="errorLabel" styleClass="error-label" wrapText="true"/>
+
+                    <!-- Filter & tabel -->
+                    <VBox styleClass="card" spacing="14" VBox.vgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <ComboBox fx:id="comboFilterKelas" styleClass="combo-rounded" prefWidth="200"/>
+                            <TextField fx:id="fieldPencarian" promptText="Cari nama atau NIS..."
+                                       styleClass="text-field-rounded" HBox.hgrow="ALWAYS"/>
+                        </HBox>
+
+                        <Label text="Tekan Ctrl atau Shift sambil klik baris untuk memilih beberapa murid sekaligus."
+                               styleClass="tip-text" wrapText="true"/>
+
+                        <TableView fx:id="tabelMurid" styleClass="tabel-akun" VBox.vgrow="ALWAYS" prefHeight="420">
+                            <columns>
+                                <TableColumn fx:id="kolomNis" text="NIS" prefWidth="120"/>
+                                <TableColumn fx:id="kolomNama" text="Nama" prefWidth="240"/>
+                                <TableColumn fx:id="kolomKelas" text="Kelas" prefWidth="150"/>
+                            </columns>
+                        </TableView>
+
+                        <Label fx:id="labelJumlahTerpilih" text="0 murid terpilih" styleClass="card-subtitle"/>
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+
+            <!-- Kolom kanan: pratinjau kartu -->
+            <ScrollPane fitToWidth="true" styleClass="dashboard-scroll" prefWidth="380" minWidth="360">
+                <VBox spacing="16" alignment="TOP_CENTER" styleClass="form-panel">
+                    <padding>
+                        <Insets top="24" right="24" bottom="24" left="24"/>
+                    </padding>
+
+                    <VBox spacing="2" alignment="CENTER">
+                        <Label text="Pratinjau Kartu" styleClass="card-title"/>
+                        <Label text="Tampilan kartu pelajar siap cetak" styleClass="card-subtitle"/>
+                    </VBox>
+
+                    <!-- ===== Kartu pelajar (juga dipakai langsung sebagai sumber cetak/ekspor) ===== -->
+                    <VBox fx:id="kartuPratinjau" styleClass="kartu-pelajar" prefWidth="320" maxWidth="320" spacing="0">
+                        <VBox styleClass="kartu-pelajar-header" spacing="1" alignment="CENTER">
+                            <padding>
+                                <Insets top="10" bottom="10"/>
+                            </padding>
+                            <Label text="MA NURUL ISLAM" styleClass="kartu-pelajar-title"/>
+                            <Label text="KARTU PELAJAR" styleClass="kartu-pelajar-subtitle"/>
+                        </VBox>
+
+                        <HBox spacing="14" alignment="CENTER_LEFT">
+                            <padding>
+                                <Insets top="16" right="16" bottom="16" left="16"/>
+                            </padding>
+
+                            <StackPane styleClass="foto-murid-frame" style="-fx-min-width:76;-fx-min-height:76;-fx-max-width:76;-fx-max-height:76;">
+                                <ImageView fx:id="imageViewFotoKartu" fitWidth="76" fitHeight="76" preserveRatio="true"/>
+                            </StackPane>
+
+                            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                <Label fx:id="labelNamaKartu" text="Nama Murid" styleClass="kartu-pelajar-nama" wrapText="true"/>
+                                <Label fx:id="labelNisKartu" text="NIS: -" styleClass="kartu-pelajar-detail"/>
+                                <Label fx:id="labelKelasKartu" text="Kelas: -" styleClass="kartu-pelajar-detail"/>
+                            </VBox>
+
+                            <ImageView fx:id="imageViewQrKartu" fitWidth="64" fitHeight="64" preserveRatio="true"/>
+                        </HBox>
+                    </VBox>
+                    <!-- ===== akhir kartu pelajar ===== -->
+
+                    <VBox spacing="10">
+                        <Button fx:id="btnCetak" text="Cetak" styleClass="btn-primary" maxWidth="Infinity" disable="true"/>
+                        <Button fx:id="btnSimpanPng" text="Simpan sebagai PNG" styleClass="btn-secondary" maxWidth="Infinity" disable="true"/>
+                        <Button fx:id="btnRegenerateToken" text="Buat Ulang Kode QR" styleClass="btn-danger" maxWidth="Infinity" disable="true"/>
+                    </VBox>
+
+                    <VBox styleClass="tip-box" spacing="6">
+                        <Label text="TIPS" styleClass="tip-title"/>
+                        <Label text="Pilih printer &quot;Microsoft Print to PDF&quot; pada dialog cetak jika ingin hasil berupa file PDF, bukan kertas fisik."
+                               wrapText="true" styleClass="tip-text"/>
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+        </HBox>
+    </center>
+</BorderPane>

@@ -1,0 +1,793 @@
+/*
+ * Palet warna & style dasar SIAP, diambil dari desain UI (login_siap, dsb.)
+ * agar tampilan JavaFX konsisten dengan desain yang sudah disetujui.
+ *
+ * Warna utama:
+ *   --primary        : #006a65  (teal gelap - tombol utama, header)
+ *   --primary-light   : #20b2aa  (teal terang - hover, aksen)
+ *   --primary-lighter : #59dad1  (teal muda - highlight, badge)
+ *   --bg-surface       : #f8f9fb  (latar belakang layar)
+ *   --border            : #e1e2e4  (garis pemisah, border input)
+ *   --text-dark         : #191c1e  (teks utama)
+ */
+
+.starting-root {
+    -fx-background-color: #f8f9fb;
+    -fx-font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+.app-logo {
+    -fx-font-size: 40px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #006a65;
+}
+
+.app-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: #191c1e;
+}
+
+.status-label {
+    -fx-font-size: 14px;
+    -fx-padding: 10 0 0 0;
+}
+
+.status-ok {
+    -fx-text-fill: #20b2aa;
+    -fx-font-weight: bold;
+}
+
+.status-error {
+    -fx-text-fill: #d64545;
+    -fx-font-weight: bold;
+}
+
+.info-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6b7076;
+}
+
+/* Kelas-kelas umum berikut disiapkan untuk dipakai di tahap Login/Dashboard */
+
+.btn-primary {
+    -fx-background-color: #006a65;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 10 24 10 24;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #20b2aa;
+}
+
+.text-field-rounded {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #e1e2e4;
+    -fx-padding: 10;
+}
+
+/* ===================== Halaman Login ===================== */
+
+.login-root {
+    -fx-background-color: white;
+    -fx-font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+.login-brand-panel {
+    -fx-background-color: #006a65;
+}
+
+.brand-logo {
+    -fx-font-size: 44px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.brand-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #cfe9e7;
+}
+
+.login-form-panel {
+    -fx-background-color: #f8f9fb;
+}
+
+.form-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #191c1e;
+}
+
+.form-caption {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6b7076;
+}
+
+.field-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #191c1e;
+}
+
+.show-password-check {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6b7076;
+}
+
+.error-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #d64545;
+}
+
+.link {
+    -fx-text-fill: #006a65;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.combo-rounded {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #e1e2e4;
+}
+
+.form-scroll {
+    -fx-background-color: transparent;
+}
+
+.form-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* ================= Halaman Verifikasi Akun ================= */
+
+.verifikasi-root {
+    -fx-background-color: #f8f9fb;
+    -fx-font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+.verifikasi-header {
+    -fx-background-color: #006a65;
+}
+
+.page-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.page-caption {
+    -fx-font-size: 12px;
+    -fx-text-fill: #cfe9e7;
+}
+
+.link-header {
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.verifikasi-body {
+    -fx-background-color: #f8f9fb;
+}
+
+.tabel-akun {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #e1e2e4;
+}
+
+.btn-secondary {
+    -fx-background-color: white;
+    -fx-text-fill: #191c1e;
+    -fx-border-color: #e1e2e4;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 10 20 10 20;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #f0f1f3;
+}
+
+.btn-danger {
+    -fx-background-color: #d64545;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 10 20 10 20;
+    -fx-cursor: hand;
+}
+
+.btn-danger:hover {
+    -fx-background-color: #c23a3a;
+}
+
+/* ===================== Halaman Dashboard ===================== */
+
+.dashboard-root {
+    -fx-background-color: #f8f9fb;
+    -fx-font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+.dashboard-scroll, .dashboard-scroll > .viewport {
+    -fx-background-color: #f8f9fb;
+    -fx-background: #f8f9fb;
+}
+
+.dashboard-body {
+    -fx-background-color: #f8f9fb;
+}
+
+/* --- Sidebar --- */
+
+.sidebar {
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 0);
+}
+
+.brand-icon {
+    -fx-background-color: #006a65;
+    -fx-background-radius: 8;
+    -fx-min-width: 40;
+    -fx-min-height: 40;
+    -fx-max-width: 40;
+    -fx-max-height: 40;
+}
+
+.brand-icon-text {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+.sidebar-brand {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #006a65;
+}
+
+.sidebar-brand-sub {
+    -fx-font-size: 10px;
+    -fx-text-fill: #6b7076;
+}
+
+.nav-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: #3c4948;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 12 10 12;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.nav-item:hover {
+    -fx-background-color: #f0f1f3;
+}
+
+.nav-item-active {
+    -fx-background-color: #e6f5f4;
+    -fx-text-fill: #006a65;
+    -fx-font-weight: bold;
+}
+
+.system-status-box {
+    -fx-background-color: #e6f5f4;
+    -fx-background-radius: 8;
+    -fx-padding: 10 12 10 12;
+}
+
+.system-status-text {
+    -fx-text-fill: #006a65;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+.link-logout {
+    -fx-text-fill: #ba1a1a;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 0 0 12;
+}
+
+/* --- Top bar --- */
+
+.topbar-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #191c1e;
+}
+
+.date-chip {
+    -fx-background-color: white;
+    -fx-border-color: #e1e2e4;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 8 14 8 14;
+}
+
+.date-chip-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #3c4948;
+    -fx-font-weight: bold;
+}
+
+.user-name {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #191c1e;
+}
+
+.user-role {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6b7076;
+}
+
+.avatar-circle {
+    -fx-background-color: #e6f5f4;
+    -fx-background-radius: 999;
+    -fx-min-width: 40;
+    -fx-min-height: 40;
+    -fx-max-width: 40;
+    -fx-max-height: 40;
+}
+
+.avatar-text {
+    -fx-text-fill: #006a65;
+    -fx-font-weight: bold;
+}
+
+/* --- Sapaan --- */
+
+.greeting-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #191c1e;
+}
+
+.greeting-caption {
+    -fx-font-size: 13px;
+    -fx-text-fill: #6b7076;
+}
+
+/* --- Kartu umum --- */
+
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: #e1e2e4;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(32,178,170,0.08), 10, 0, 0, 2);
+}
+
+.card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #191c1e;
+}
+
+.card-subtitle {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6b7076;
+}
+
+/* --- Kartu statistik --- */
+
+.stat-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-padding: 18;
+    -fx-border-width: 0 0 0 4;
+    -fx-effect: dropshadow(gaussian, rgba(32,178,170,0.08), 10, 0, 0, 2);
+}
+
+.stat-card-green   { -fx-border-color: #20b2aa; }
+.stat-card-teal     { -fx-border-color: #006a62; }
+.stat-card-orange { -fx-border-color: #fa7b4c; }
+.stat-card-red      { -fx-border-color: #ba1a1a; }
+
+.stat-icon {
+    -fx-background-radius: 8;
+    -fx-min-width: 34;
+    -fx-min-height: 34;
+    -fx-max-width: 34;
+    -fx-max-height: 34;
+}
+
+.stat-icon-green  { -fx-background-color: #e0f6f4; }
+.stat-icon-teal    { -fx-background-color: #e6f5f4; }
+.stat-icon-orange { -fx-background-color: #ffe9df; }
+.stat-icon-red     { -fx-background-color: #ffdad6; }
+
+.stat-icon-text {
+    -fx-font-weight: bold;
+    -fx-text-fill: #006a65;
+}
+
+.stat-badge {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 999;
+    -fx-padding: 3 8 3 8;
+}
+
+.stat-badge-up {
+    -fx-text-fill: #006a65;
+    -fx-background-color: #e0f6f4;
+}
+
+.stat-badge-down {
+    -fx-text-fill: #ba1a1a;
+    -fx-background-color: #ffdad6;
+}
+
+.stat-value {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #191c1e;
+}
+
+.stat-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #3c4948;
+}
+
+.stat-caption {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6b7076;
+}
+
+/* --- Grafik kehadiran --- */
+
+.attendance-chart {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.attendance-chart .chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.attendance-chart .default-color0.chart-series-line {
+    -fx-stroke: #20b2aa;
+    -fx-stroke-width: 3;
+}
+
+.attendance-chart .default-color0.chart-line-symbol {
+    -fx-background-color: #006a65, white;
+}
+
+.attendance-chart .axis {
+    -fx-tick-label-fill: #6b7076;
+    -fx-font-size: 11px;
+}
+
+/* --- Log aktivitas --- */
+
+.log-avatar {
+    -fx-background-color: #e6f5f4;
+    -fx-background-radius: 999;
+    -fx-min-width: 36;
+    -fx-min-height: 36;
+    -fx-max-width: 36;
+    -fx-max-height: 36;
+}
+
+.log-avatar-text {
+    -fx-text-fill: #006a65;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.log-nama {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #191c1e;
+}
+
+.log-kelas {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6b7076;
+}
+
+.log-waktu {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6b7076;
+}
+
+.status-badge {
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 999;
+    -fx-padding: 4 10 4 10;
+}
+
+.status-badge-hadir {
+    -fx-text-fill: #006a65;
+    -fx-background-color: #e0f6f4;
+}
+
+.status-badge-terlambat {
+    -fx-text-fill: #a43c12;
+    -fx-background-color: #ffe9df;
+}
+
+.status-badge-alfa {
+    -fx-text-fill: #ba1a1a;
+    -fx-background-color: #ffdad6;
+}
+
+.status-badge-izin {
+    -fx-text-fill: #006a62;
+    -fx-background-color: #e6f5f4;
+}
+
+/* --- Quick actions --- */
+
+.quick-action-btn {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #191c1e;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-padding: 18 10 18 10;
+    -fx-cursor: hand;
+}
+
+.quick-action-btn:hover {
+    -fx-background-color: #e7e8ea;
+}
+
+/* --- Pengumuman --- */
+
+.announcement-card {
+    -fx-background-color: #006a65;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+}
+
+.announcement-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.announcement-text {
+    -fx-font-size: 12px;
+    -fx-text-fill: #cfe9e7;
+}
+
+.btn-on-announcement {
+    -fx-background-color: white;
+    -fx-text-fill: #006a65;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 10 18 10 18;
+    -fx-cursor: hand;
+}
+
+.btn-on-announcement:hover {
+    -fx-background-color: #e6f5f4;
+}
+
+/* --- Filter tab peran (halaman Verifikasi Akun) --- */
+
+.filter-tab-group {
+    -fx-padding: 0 0 4 0;
+}
+
+.filter-tab {
+    -fx-background-color: white;
+    -fx-border-color: #e1e2e4;
+    -fx-border-radius: 999;
+    -fx-background-radius: 999;
+    -fx-text-fill: #3c4948;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 18 8 18;
+    -fx-cursor: hand;
+}
+
+.filter-tab:hover {
+    -fx-background-color: #f0f1f3;
+}
+
+.filter-tab-active {
+    -fx-background-color: #006a65;
+    -fx-text-fill: white;
+    -fx-border-color: #006a65;
+}
+
+/* ===================== Halaman Scan QR ===================== */
+
+.scanqr-camera-frame {
+    -fx-background-color: #10181a;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: white;
+    -fx-border-width: 4;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 18, 0, 0, 6);
+}
+
+.scanqr-camera-overlay-text {
+    -fx-text-fill: #9fb3b1;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.scanqr-viewfinder {
+    -fx-border-color: #20b2aa;
+    -fx-border-width: 4;
+    -fx-border-radius: 16;
+    -fx-background-color: transparent;
+}
+
+.scanqr-status-chip {
+    -fx-background-color: rgba(0,0,0,0.55);
+    -fx-background-radius: 999;
+    -fx-padding: 6 14 6 10;
+}
+
+.scanqr-status-chip-text {
+    -fx-text-fill: white;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.scanqr-status-dot {
+    -fx-background-color: #20b2aa;
+    -fx-background-radius: 999;
+    -fx-min-width: 8;
+    -fx-min-height: 8;
+    -fx-max-width: 8;
+    -fx-max-height: 8;
+}
+
+.scanqr-status-dot-off {
+    -fx-background-color: #ba1a1a;
+}
+
+.scanqr-instruction-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #006a65;
+}
+
+.scanqr-instruction-caption {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6b7076;
+}
+
+.scanqr-result-card {
+    -fx-border-color: rgba(32,178,170,0.15);
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+    -fx-background-radius: 16;
+}
+
+.scanqr-time-chip {
+    -fx-font-size: 11px;
+    -fx-text-fill: #3c4948;
+    -fx-background-color: #e7e8ea;
+    -fx-background-radius: 999;
+    -fx-padding: 3 10 3 10;
+}
+
+.scanqr-avatar-lg {
+    -fx-background-color: #e6f5f4;
+    -fx-background-radius: 16;
+    -fx-min-width: 64;
+    -fx-min-height: 64;
+    -fx-max-width: 64;
+    -fx-max-height: 64;
+}
+
+.scanqr-avatar-lg-text {
+    -fx-text-fill: #006a65;
+    -fx-font-weight: bold;
+    -fx-font-size: 22px;
+}
+
+.scanqr-result-nama {
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #006a65;
+}
+
+.scanqr-mini-label {
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6b7076;
+}
+
+.scanqr-jam-hasil {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #191c1e;
+}
+
+.scanqr-history-item {
+    -fx-background-color: #f3f4f6;
+    -fx-background-radius: 12;
+    -fx-padding: 10 12 10 12;
+}
+
+.scanqr-history-item-error {
+    -fx-background-color: #fff1ef;
+    -fx-border-color: rgba(186,26,26,0.15);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+/* --- Halaman Laporan Mata Pelajaran --- */
+
+.laporan-header-row {
+    -fx-padding: 6 10 6 10;
+    -fx-background-color: #f4f6f6;
+    -fx-background-radius: 8;
+}
+
+.laporan-header-text {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6b7076;
+}
+
+.laporan-data-row {
+    -fx-padding: 10;
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #eef0f0;
+    -fx-border-radius: 8;
+}
+
+.laporan-data-row:hover {
+    -fx-background-color: #fafcfc;
+}
+
+.laporan-cell-text {
+    -fx-font-size: 12.5px;
+    -fx-text-fill: #191c1e;
+}
+
+.laporan-cell-text-muted {
+    -fx-font-size: 12.5px;
+    -fx-text-fill: #6b7076;
+}
+
+/* ================= Aksi tabel Laporan ================= */
+.laporan-btn-ubah {
+    -fx-background-color: #fff6d6;
+    -fx-text-fill: #805b00;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 6 9 6 9;
+    -fx-cursor: hand;
+}
+
+.laporan-btn-ubah:hover {
+    -fx-background-color: #ffedb0;
+}
+
+.laporan-btn-hapus {
+    -fx-background-color: #ffe3e0;
+    -fx-text-fill: #a93429;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 6 9 6 9;
+    -fx-cursor: hand;
+}
+
+.laporan-btn-hapus:hover {
+    -fx-background-color: #ffd2cd;
+}

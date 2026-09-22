@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox prefHeight="600.0" prefWidth="960.0" styleClass="login-root"
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.nurulislam.siap.controller.DaftarAkunController">
+
+    <!-- Panel kiri: branding, konsisten dengan halaman Login -->
+    <VBox alignment="CENTER" prefWidth="380" spacing="12" styleClass="login-brand-panel">
+        <padding>
+            <Insets top="40" right="30" bottom="40" left="30"/>
+        </padding>
+        <Label text="SIAP" styleClass="brand-logo"/>
+        <Label text="Sistem Informasi Absensi Pelajar" styleClass="brand-subtitle" wrapText="true"
+               textAlignment="CENTER"/>
+        <Label text="MA Nurul Islam" styleClass="brand-subtitle"/>
+    </VBox>
+
+    <!-- Panel kanan: form pendaftaran akun -->
+    <StackPane HBox.hgrow="ALWAYS" styleClass="login-form-panel">
+        <ScrollPane fitToWidth="true" styleClass="form-scroll">
+            <StackPane alignment="CENTER">
+            <VBox alignment="CENTER" maxWidth="360" spacing="14">
+                <padding>
+                    <Insets top="30" bottom="30"/>
+                </padding>
+
+                <Label text="Daftar Akun" styleClass="form-title"/>
+                <Label text="Buat akun untuk Staf TU atau Guru Mata Pelajaran" styleClass="form-caption"
+                       wrapText="true" textAlignment="CENTER"/>
+
+                <VBox spacing="6">
+                    <Label text="Nama Lengkap" styleClass="field-label"/>
+                    <TextField fx:id="namaField" promptText="Nama lengkap Anda" styleClass="text-field-rounded"/>
+                </VBox>
+
+                <VBox spacing="6">
+                    <Label text="Email" styleClass="field-label"/>
+                    <TextField fx:id="emailField" promptText="contoh@sekolah.id" styleClass="text-field-rounded"/>
+                </VBox>
+
+                <VBox spacing="6">
+                    <Label text="Daftar Sebagai" styleClass="field-label"/>
+                    <ComboBox fx:id="roleComboBox" maxWidth="Infinity" promptText="Pilih peran"
+                              styleClass="combo-rounded"/>
+                </VBox>
+
+                <VBox spacing="6">
+                    <Label text="Kata Sandi" styleClass="field-label"/>
+                    <StackPane>
+                        <PasswordField fx:id="passwordField" promptText="Minimal 6 karakter" styleClass="text-field-rounded"/>
+                        <TextField fx:id="passwordVisibleField" promptText="Minimal 6 karakter" styleClass="text-field-rounded"/>
+                    </StackPane>
+                </VBox>
+
+                <VBox spacing="6">
+                    <Label text="Konfirmasi Kata Sandi" styleClass="field-label"/>
+                    <StackPane>
+                        <PasswordField fx:id="konfirmasiPasswordField" promptText="Ulangi kata sandi" styleClass="text-field-rounded"/>
+                        <TextField fx:id="konfirmasiPasswordVisibleField" promptText="Ulangi kata sandi" styleClass="text-field-rounded"/>
+                    </StackPane>
+                </VBox>
+
+                <CheckBox fx:id="showPasswordCheckBox" text="Tampilkan kata sandi" styleClass="show-password-check"/>
+
+                <Label fx:id="errorLabel" styleClass="error-label" wrapText="true"/>
+
+                <Button fx:id="btnDaftar" text="Daftar" styleClass="btn-primary" maxWidth="Infinity" defaultButton="true"/>
+
+                <HBox alignment="CENTER" spacing="4">
+                    <Label text="Sudah punya akun?" styleClass="form-caption"/>
+                    <Hyperlink fx:id="linkMasuk" text="Masuk" styleClass="link"/>
+                </HBox>
+            </VBox>
+            </StackPane>
+        </ScrollPane>
+    </StackPane>
+</HBox>

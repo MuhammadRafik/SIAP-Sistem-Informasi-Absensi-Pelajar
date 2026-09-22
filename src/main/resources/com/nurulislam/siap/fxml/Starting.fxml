@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="16" styleClass="starting-root"
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.nurulislam.siap.controller.StartingController">
+    <padding>
+        <Insets top="40" right="40" bottom="40" left="40"/>
+    </padding>
+
+    <Label text="SIAP" styleClass="app-logo"/>
+    <Label text="Sistem Informasi Absensi Pelajar" styleClass="app-subtitle"/>
+    <Label text="MA Nurul Islam" styleClass="app-subtitle"/>
+
+    <Label fx:id="statusDbLabel" text="Mengecek koneksi database..." styleClass="status-label"/>
+
+    <Label text="Fondasi project berhasil dibuat. Tahap berikutnya: Halaman Login."
+           styleClass="info-label"/>
+</VBox>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="800.0" prefWidth="1280.0" styleClass="dashboard-root"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.nurulislam.siap.controller.DashboardController">
+
+    <!-- ================= Sidebar kiri ================= -->
+    <left>
+        <VBox prefWidth="240.0" styleClass="sidebar" spacing="4">
+            <padding>
+                <Insets top="20" right="16" bottom="20" left="16"/>
+            </padding>
+
+            <!-- Brand -->
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <padding>
+                    <Insets bottom="20" top="4"/>
+                </padding>
+                <StackPane styleClass="brand-icon">
+                    <Label text="S" styleClass="brand-icon-text"/>
+                </StackPane>
+                <VBox spacing="1">
+                    <Label text="SIAP" styleClass="sidebar-brand"/>
+                    <Label text="School Admin System" styleClass="sidebar-brand-sub"/>
+                </VBox>
+            </HBox>
+
+            <Button fx:id="btnNavDashboard" text="Dashboard" styleClass="nav-item, nav-item-active" maxWidth="Infinity"/>
+            <Button fx:id="btnNavVerifikasi" text="Verifikasi Akun" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavScanQr" text="Scan QR" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavDataMurid" text="Data Murid" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavDataKelas" text="Data Kelas" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavMataPelajaran" text="Mata Pelajaran" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavCetakKartu" text="Cetak Kartu Pelajar" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavLaporan" text="Laporan" styleClass="nav-item" maxWidth="Infinity"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <VBox styleClass="system-status-box" spacing="4">
+                <Label fx:id="labelStatusDatabase" text="Memeriksa database..." styleClass="system-status-text, db-checking"/>
+            </VBox>
+
+            <Hyperlink fx:id="linkLogout" text="Logout" styleClass="link-logout"/>
+        </VBox>
+    </left>
+
+    <!-- ================= Konten utama ================= -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="dashboard-scroll">
+            <VBox styleClass="dashboard-body" spacing="20">
+                <padding>
+                    <Insets top="24" right="32" bottom="32" left="32"/>
+                </padding>
+
+                <!-- Top bar -->
+                <HBox alignment="CENTER_LEFT" spacing="16">
+                    <Label text="Dashboard" styleClass="topbar-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <VBox styleClass="date-chip" alignment="CENTER_LEFT">
+                        <Label fx:id="labelTanggal" text="Senin, 24 Mei 2024" styleClass="date-chip-text"/>
+                    </VBox>
+                    <VBox alignment="CENTER_RIGHT" spacing="1">
+                        <Label fx:id="labelNamaUser" text="Admin User" styleClass="user-name"/>
+                        <Label fx:id="labelRoleUser" text="School Administrator" styleClass="user-role"/>
+                    </VBox>
+                    <StackPane styleClass="avatar-circle">
+                        <Label fx:id="labelInisialUser" text="A" styleClass="avatar-text"/>
+                    </StackPane>
+                </HBox>
+
+                <!-- Sapaan -->
+                <VBox spacing="4">
+                    <Label fx:id="labelHalo" text="Halo, Admin!" styleClass="greeting-title"/>
+                    <Label text="Selamat datang kembali di sistem manajemen kehadiran." styleClass="greeting-caption"/>
+                </VBox>
+
+                <!-- Kartu statistik -->
+                <HBox spacing="16">
+                    <VBox styleClass="stat-card, stat-card-green" HBox.hgrow="ALWAYS" spacing="10">
+                        <HBox alignment="CENTER_LEFT">
+                            <StackPane styleClass="stat-icon, stat-icon-green">
+                                <Label text="&#10003;" styleClass="stat-icon-text"/>
+                            </StackPane>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Label text="+12%" styleClass="stat-badge, stat-badge-up"/>
+                        </HBox>
+                        <Label fx:id="labelTotalHadir" text="1,248" styleClass="stat-value"/>
+                        <Label text="Total Hadir" styleClass="stat-label"/>
+                        <Label text="Siswa tercatat masuk hari ini" styleClass="stat-caption"/>
+                    </VBox>
+
+                    <VBox styleClass="stat-card, stat-card-teal" HBox.hgrow="ALWAYS" spacing="10">
+                        <HBox alignment="CENTER_LEFT">
+                            <StackPane styleClass="stat-icon, stat-icon-teal">
+                                <Label text="i" styleClass="stat-icon-text"/>
+                            </StackPane>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Label text="-2%" styleClass="stat-badge, stat-badge-down"/>
+                        </HBox>
+                        <Label fx:id="labelIzinSakit" text="42" styleClass="stat-value"/>
+                        <Label text="Izin / Sakit" styleClass="stat-label"/>
+                        <Label text="Konfirmasi surat tersedia" styleClass="stat-caption"/>
+                    </VBox>
+
+                    <VBox styleClass="stat-card, stat-card-orange" HBox.hgrow="ALWAYS" spacing="10">
+                        <HBox alignment="CENTER_LEFT">
+                            <StackPane styleClass="stat-icon, stat-icon-orange">
+                                <Label text="&#8986;" styleClass="stat-icon-text"/>
+                            </StackPane>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Label text="+5%" styleClass="stat-badge, stat-badge-up"/>
+                        </HBox>
+                        <Label fx:id="labelTerlambat" text="18" styleClass="stat-value"/>
+                        <Label text="Terlambat" styleClass="stat-label"/>
+                        <Label text="Batas toleransi 15 menit" styleClass="stat-caption"/>
+                    </VBox>
+
+                    <VBox styleClass="stat-card, stat-card-red" HBox.hgrow="ALWAYS" spacing="10">
+                        <HBox alignment="CENTER_LEFT">
+                            <StackPane styleClass="stat-icon, stat-icon-red">
+                                <Label text="&#10005;" styleClass="stat-icon-text"/>
+                            </StackPane>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Label text="-8%" styleClass="stat-badge, stat-badge-down"/>
+                        </HBox>
+                        <Label fx:id="labelAlfa" text="5" styleClass="stat-value"/>
+                        <Label text="Alfa" styleClass="stat-label"/>
+                        <Label text="Belum ada keterangan" styleClass="stat-caption"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Grafik & Log Aktivitas -->
+                <HBox spacing="20">
+                    <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="12">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <VBox HBox.hgrow="ALWAYS" spacing="2">
+                                <Label text="Weekly Attendance Trend" styleClass="card-title"/>
+                                <Label text="Data kehadiran 7 hari terakhir" styleClass="card-subtitle"/>
+                            </VBox>
+                            <ComboBox fx:id="comboRentangWaktu" styleClass="combo-rounded" prefWidth="150"/>
+                        </HBox>
+                        <LineChart fx:id="chartKehadiran" legendVisible="false" animated="false"
+                                   styleClass="attendance-chart" VBox.vgrow="ALWAYS">
+                            <xAxis>
+                                <CategoryAxis fx:id="chartXAxis" side="BOTTOM"/>
+                            </xAxis>
+                            <yAxis>
+                                <NumberAxis fx:id="chartYAxis" side="LEFT"/>
+                            </yAxis>
+                        </LineChart>
+                    </VBox>
+
+                    <VBox styleClass="card" prefWidth="340" minWidth="320" spacing="10">
+                        <HBox alignment="CENTER_LEFT">
+                            <Label text="Log Aktivitas" styleClass="card-title" HBox.hgrow="ALWAYS"/>
+                            <Hyperlink fx:id="linkLihatSemua" text="Lihat Semua" styleClass="link"/>
+                        </HBox>
+                        <Separator/>
+                        <VBox fx:id="logAktivitasBox" spacing="14"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Quick actions & pengumuman -->
+                <HBox spacing="20">
+                    <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="14">
+                        <Label text="Quick Actions" styleClass="card-title"/>
+                        <HBox spacing="14">
+                            <Button fx:id="btnTambahMurid" text="Tambah Murid" styleClass="quick-action-btn" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <Button fx:id="btnExportLaporan" text="Export Laporan" styleClass="quick-action-btn" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <Button fx:id="btnKonfigurasi" text="Konfigurasi" styleClass="quick-action-btn" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        </HBox>
+                    </VBox>
+
+                    <VBox styleClass="announcement-card" prefWidth="340" minWidth="320" spacing="10">
+                        <Label text="Pengumuman Sistem" styleClass="announcement-title"/>
+                        <Label text="Maintenance server dijadwalkan pada hari Sabtu, 29 Mei pukul 23.00 WIB. Harap simpan semua data sebelum waktu tersebut."
+                               wrapText="true" styleClass="announcement-text"/>
+                        <Region VBox.vgrow="ALWAYS"/>
+                        <Button fx:id="btnBacaSelengkapnya" text="Baca Selengkapnya" styleClass="btn-on-announcement"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

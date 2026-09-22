@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="800.0" prefWidth="1280.0" styleClass="dashboard-root"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.nurulislam.siap.controller.ManajemenDataMuridController">
+
+    <!-- ================= Sidebar kiri (sama seperti Dashboard/Data Kelas) ================= -->
+    <left>
+        <VBox prefWidth="240.0" styleClass="sidebar" spacing="4">
+            <padding>
+                <Insets top="20" right="16" bottom="20" left="16"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <padding>
+                    <Insets bottom="20" top="4"/>
+                </padding>
+                <StackPane styleClass="brand-icon">
+                    <Label text="S" styleClass="brand-icon-text"/>
+                </StackPane>
+                <VBox spacing="1">
+                    <Label text="SIAP" styleClass="sidebar-brand"/>
+                    <Label text="School Admin System" styleClass="sidebar-brand-sub"/>
+                </VBox>
+            </HBox>
+
+            <Button fx:id="btnNavDashboard" text="Dashboard" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavVerifikasi" text="Verifikasi Akun" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavScanQr" text="Scan QR" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavDataMurid" text="Data Murid" styleClass="nav-item, nav-item-active" maxWidth="Infinity"/>
+            <Button fx:id="btnNavDataKelas" text="Data Kelas" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavMataPelajaran" text="Mata Pelajaran" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavCetakKartu" text="Cetak Kartu Pelajar" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavLaporan" text="Laporan" styleClass="nav-item" maxWidth="Infinity"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <VBox styleClass="system-status-box" spacing="4">
+                <Label text="System Status: Active" styleClass="system-status-text"/>
+            </VBox>
+
+            <Hyperlink fx:id="linkLogout" text="Logout" styleClass="link-logout"/>
+        </VBox>
+    </left>
+
+    <!-- ================= Konten utama ================= -->
+    <center>
+        <HBox>
+            <!-- Kolom kiri: ringkasan + tabel -->
+            <ScrollPane fitToWidth="true" styleClass="dashboard-scroll" HBox.hgrow="ALWAYS">
+                <VBox styleClass="dashboard-body" spacing="20">
+                    <padding>
+                        <Insets top="24" right="24" bottom="32" left="32"/>
+                    </padding>
+
+                    <!-- Top bar -->
+                    <HBox alignment="CENTER_LEFT" spacing="16">
+                        <VBox spacing="2">
+                            <Label text="Data Murid" styleClass="topbar-title"/>
+                            <Label text="Kelola data induk murid dan status keaktifannya"
+                                   styleClass="greeting-caption"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <VBox alignment="CENTER_RIGHT" spacing="1">
+                            <Label fx:id="labelNamaUser" text="Admin User" styleClass="user-name"/>
+                            <Label fx:id="labelRoleUser" text="School Administrator" styleClass="user-role"/>
+                        </VBox>
+                        <StackPane styleClass="avatar-circle">
+                            <Label fx:id="labelInisialUser" text="A" styleClass="avatar-text"/>
+                        </StackPane>
+                    </HBox>
+
+                    <!-- Kartu ringkasan -->
+                    <HBox spacing="16">
+                        <VBox styleClass="stat-card, stat-card-green" HBox.hgrow="ALWAYS" spacing="10">
+                            <StackPane styleClass="stat-icon, stat-icon-green" alignment="CENTER_LEFT">
+                                <Label text="&#128101;" styleClass="stat-icon-text"/>
+                            </StackPane>
+                            <Label fx:id="labelTotalMurid" text="0" styleClass="stat-value"/>
+                            <Label text="Total Murid" styleClass="stat-label"/>
+                        </VBox>
+
+                        <VBox styleClass="stat-card, stat-card-teal" HBox.hgrow="ALWAYS" spacing="10">
+                            <StackPane styleClass="stat-icon, stat-icon-teal" alignment="CENTER_LEFT">
+                                <Label text="&#9989;" styleClass="stat-icon-text"/>
+                            </StackPane>
+                            <Label fx:id="labelMuridAktif" text="0" styleClass="stat-value"/>
+                            <Label text="Murid Aktif" styleClass="stat-label"/>
+                        </VBox>
+
+                        <VBox styleClass="stat-card, stat-card-orange" HBox.hgrow="ALWAYS" spacing="10">
+                            <StackPane styleClass="stat-icon, stat-icon-orange" alignment="CENTER_LEFT">
+                                <Label text="&#128102;" styleClass="stat-icon-text"/>
+                            </StackPane>
+                            <Label fx:id="labelLakiLaki" text="0" styleClass="stat-value"/>
+                            <Label text="Laki-laki" styleClass="stat-label"/>
+                        </VBox>
+
+                        <VBox styleClass="stat-card, stat-card-red" HBox.hgrow="ALWAYS" spacing="10">
+                            <StackPane styleClass="stat-icon, stat-icon-red" alignment="CENTER_LEFT">
+                                <Label text="&#128103;" styleClass="stat-icon-text"/>
+                            </StackPane>
+                            <Label fx:id="labelPerempuan" text="0" styleClass="stat-value"/>
+                            <Label text="Perempuan" styleClass="stat-label"/>
+                        </VBox>
+                    </HBox>
+
+                    <Label fx:id="errorLabel" styleClass="error-label" wrapText="true"/>
+
+                    <!-- Tabel murid -->
+                    <VBox styleClass="card" spacing="14" VBox.vgrow="ALWAYS">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <TextField fx:id="fieldPencarian" promptText="Cari NIS, nama, atau kelas..."
+                                       styleClass="text-field-rounded" HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="btnRefresh" text="Muat Ulang" styleClass="btn-secondary"/>
+                            <Button fx:id="btnTambahMurid" text="+ Tambah Murid" styleClass="btn-primary"/>
+                        </HBox>
+
+                        <TableView fx:id="tabelMurid" styleClass="tabel-akun" VBox.vgrow="ALWAYS" prefHeight="420">
+                            <columns>
+                                <TableColumn fx:id="kolomNis" text="NIS" prefWidth="110"/>
+                                <TableColumn fx:id="kolomNama" text="Nama" prefWidth="220"/>
+                                <TableColumn fx:id="kolomKelas" text="Kelas" prefWidth="140"/>
+                                <TableColumn fx:id="kolomJenisKelamin" text="Jenis Kelamin" prefWidth="120"/>
+                                <TableColumn fx:id="kolomStatus" text="Status" prefWidth="110"/>
+                            </columns>
+                        </TableView>
+
+                        <HBox alignment="CENTER_RIGHT" spacing="10">
+                            <Button fx:id="btnHapus" text="Hapus" styleClass="btn-danger"/>
+                            <Button fx:id="btnUbah" text="Ubah" styleClass="btn-secondary"/>
+                        </HBox>
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+
+            <!-- Kolom kanan: form tambah/ubah murid -->
+            <ScrollPane fitToWidth="true" styleClass="dashboard-scroll" prefWidth="340" minWidth="320">
+                <VBox styleClass="form-panel" spacing="16">
+                    <padding>
+                        <Insets top="24" right="24" bottom="24" left="20"/>
+                    </padding>
+
+                    <VBox spacing="2">
+                        <Label fx:id="labelJudulForm" text="Form Murid" styleClass="card-title"/>
+                        <Label text="Tambah atau ubah data murid" styleClass="card-subtitle"/>
+                    </VBox>
+
+                    <VBox alignment="CENTER" spacing="8">
+                        <StackPane styleClass="foto-murid-frame">
+                            <ImageView fx:id="imageViewFoto" fitWidth="120" fitHeight="120" preserveRatio="true"/>
+                        </StackPane>
+                        <Button fx:id="btnPilihFoto" text="Pilih Foto" styleClass="btn-secondary"/>
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label text="NIS" styleClass="field-label"/>
+                        <TextField fx:id="fieldNis" promptText="Contoh: 2425010045" styleClass="text-field-rounded"/>
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label text="Nama Lengkap" styleClass="field-label"/>
+                        <TextField fx:id="fieldNama" promptText="Nama lengkap murid" styleClass="text-field-rounded"/>
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label text="Jenis Kelamin" styleClass="field-label"/>
+                        <ComboBox fx:id="comboJenisKelamin" styleClass="combo-rounded" maxWidth="Infinity"
+                                  promptText="Pilih jenis kelamin"/>
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label text="Tanggal Lahir" styleClass="field-label"/>
+                        <DatePicker fx:id="datePickerTanggalLahir" styleClass="text-field-rounded" maxWidth="Infinity"/>
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label text="Kelas" styleClass="field-label"/>
+                        <ComboBox fx:id="comboKelas" styleClass="combo-rounded" maxWidth="Infinity"
+                                  promptText="Pilih kelas"/>
+                    </VBox>
+
+                    <VBox spacing="6">
+                        <Label text="Status" styleClass="field-label"/>
+                        <ComboBox fx:id="comboStatus" styleClass="combo-rounded" maxWidth="Infinity"
+                                  promptText="Pilih status"/>
+                    </VBox>
+
+                    <Label fx:id="formErrorLabel" styleClass="error-label" wrapText="true"/>
+
+                    <VBox spacing="10">
+                        <Button fx:id="btnSimpan" text="Simpan" styleClass="btn-primary" maxWidth="Infinity"/>
+                        <Button fx:id="btnBatal" text="Batal" styleClass="btn-secondary" maxWidth="Infinity"/>
+                    </VBox>
+
+                    <VBox styleClass="tip-box" spacing="6">
+                        <Label text="TIPS" styleClass="tip-title"/>
+                        <Label text="Kode QR kartu pelajar dibuat otomatis oleh sistem saat murid baru disimpan - tidak perlu diisi manual."
+                               wrapText="true" styleClass="tip-text"/>
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+        </HBox>
+    </center>
+</BorderPane>

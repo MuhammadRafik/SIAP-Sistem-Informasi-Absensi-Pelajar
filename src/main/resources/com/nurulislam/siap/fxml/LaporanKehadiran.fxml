@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="900.0" prefWidth="1320.0" styleClass="dashboard-root"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.nurulislam.siap.controller.LaporanKehadiranController">
+
+    <!-- ================= Sidebar kiri (sama seperti Dashboard) ================= -->
+    <left>
+        <VBox prefWidth="240.0" styleClass="sidebar" spacing="4">
+            <padding>
+                <Insets top="20" right="16" bottom="20" left="16"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <padding>
+                    <Insets bottom="20" top="4"/>
+                </padding>
+                <StackPane styleClass="brand-icon">
+                    <Label text="S" styleClass="brand-icon-text"/>
+                </StackPane>
+                <VBox spacing="1">
+                    <Label text="SIAP" styleClass="sidebar-brand"/>
+                    <Label text="School Admin System" styleClass="sidebar-brand-sub"/>
+                </VBox>
+            </HBox>
+
+            <Button fx:id="btnNavDashboard" text="Dashboard" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavVerifikasi" text="Verifikasi Akun" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavScanQr" text="Scan QR" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavDataMurid" text="Data Murid" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavDataKelas" text="Data Kelas" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavMataPelajaran" text="Mata Pelajaran" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavCetakKartu" text="Cetak Kartu Pelajar" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavLaporan" text="Laporan" styleClass="nav-item, nav-item-active" maxWidth="Infinity"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <VBox styleClass="system-status-box" spacing="4">
+                <Label text="System Status: Active" styleClass="system-status-text"/>
+            </VBox>
+
+            <Hyperlink fx:id="linkLogout" text="Logout" styleClass="link-logout"/>
+        </VBox>
+    </left>
+
+    <!-- ================= Konten utama ================= -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="dashboard-scroll">
+            <VBox styleClass="dashboard-body" spacing="20">
+                <padding>
+                    <Insets top="24" right="32" bottom="32" left="32"/>
+                </padding>
+
+                <!-- Top bar -->
+                <HBox alignment="CENTER_LEFT" spacing="16">
+                    <VBox spacing="2">
+                        <Label text="Laporan Kehadiran" styleClass="topbar-title"/>
+                        <Label fx:id="labelSubjudul"
+                               text="Rekap absensi harian hasil Scan QR, dengan filter tanggal, kelas, dan status"
+                               styleClass="greeting-caption"/>
+                    </VBox>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <VBox alignment="CENTER_RIGHT" spacing="1">
+                        <Label fx:id="labelNamaUser" text="Admin User" styleClass="user-name"/>
+                        <Label fx:id="labelRoleUser" text="School Administrator" styleClass="user-role"/>
+                    </VBox>
+                    <StackPane styleClass="avatar-circle">
+                        <Label fx:id="labelInisialUser" text="A" styleClass="avatar-text"/>
+                    </StackPane>
+                </HBox>
+
+                <Label fx:id="errorLabel" styleClass="error-label" wrapText="true"/>
+
+                <!-- Tab jenis rekap: Harian (gerbang/Scan QR) vs Mata Pelajaran (per Guru) -->
+                <HBox spacing="8" styleClass="filter-tab-group">
+                    <ToggleButton fx:id="tabHarian" text="Absensi Harian" styleClass="filter-tab, filter-tab-active"/>
+                    <ToggleButton fx:id="tabMapel" text="Absensi Mata Pelajaran" styleClass="filter-tab"/>
+                </HBox>
+
+                <!-- Kartu Filter -->
+                <VBox styleClass="card" spacing="14">
+                    <Label text="Filter Laporan" styleClass="card-title"/>
+
+                    <HBox spacing="16">
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Tanggal Mulai" styleClass="field-label"/>
+                            <DatePicker fx:id="datePickerMulai" styleClass="text-field-rounded" maxWidth="Infinity"/>
+                        </VBox>
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Tanggal Akhir" styleClass="field-label"/>
+                            <DatePicker fx:id="datePickerAkhir" styleClass="text-field-rounded" maxWidth="Infinity"/>
+                        </VBox>
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Pilihan Kelas" styleClass="field-label"/>
+                            <ComboBox fx:id="comboKelasFilter" styleClass="combo-rounded" maxWidth="Infinity"
+                                      promptText="Semua Kelas"/>
+                        </VBox>
+                        <VBox spacing="6" HBox.hgrow="ALWAYS">
+                            <Label text="Status" styleClass="field-label"/>
+                            <ComboBox fx:id="comboStatusFilter" styleClass="combo-rounded" maxWidth="Infinity"
+                                      promptText="Semua Status"/>
+                        </VBox>
+                        <VBox fx:id="boxMapelFilter" spacing="6" HBox.hgrow="ALWAYS" managed="false" visible="false">
+                            <Label text="Mata Pelajaran" styleClass="field-label"/>
+                            <ComboBox fx:id="comboMapelFilter" styleClass="combo-rounded" maxWidth="Infinity"
+                                      promptText="Semua Mata Pelajaran"/>
+                        </VBox>
+                    </HBox>
+
+                    <HBox spacing="10">
+                        <Button fx:id="btnTerapkanFilter" text="Terapkan Filter" styleClass="btn-primary"/>
+                        <Button fx:id="btnEksporPdf" text="Cetak / Ekspor PDF" styleClass="btn-secondary"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Kartu ringkasan -->
+                <HBox spacing="16">
+                    <VBox styleClass="stat-card, stat-card-green" HBox.hgrow="ALWAYS" spacing="10">
+                        <StackPane styleClass="stat-icon, stat-icon-green" alignment="CENTER_LEFT">
+                            <Label text="&#10003;" styleClass="stat-icon-text"/>
+                        </StackPane>
+                        <Label fx:id="labelTotalHadir" text="0" styleClass="stat-value"/>
+                        <Label text="Total Hadir" styleClass="stat-label"/>
+                    </VBox>
+
+                    <VBox styleClass="stat-card, stat-card-teal" HBox.hgrow="ALWAYS" spacing="10">
+                        <StackPane styleClass="stat-icon, stat-icon-teal" alignment="CENTER_LEFT">
+                            <Label text="&#128138;" styleClass="stat-icon-text"/>
+                        </StackPane>
+                        <Label fx:id="labelIzinSakit" text="0" styleClass="stat-value"/>
+                        <Label text="Izin / Sakit" styleClass="stat-label"/>
+                    </VBox>
+
+                    <VBox styleClass="stat-card, stat-card-orange" HBox.hgrow="ALWAYS" spacing="10">
+                        <StackPane styleClass="stat-icon, stat-icon-orange" alignment="CENTER_LEFT">
+                            <Label text="&#128337;" styleClass="stat-icon-text"/>
+                        </StackPane>
+                        <Label fx:id="labelTerlambat" text="0" styleClass="stat-value"/>
+                        <Label text="Terlambat" styleClass="stat-label"/>
+                    </VBox>
+
+                    <VBox styleClass="stat-card, stat-card-red" HBox.hgrow="ALWAYS" spacing="10">
+                        <StackPane styleClass="stat-icon, stat-icon-red" alignment="CENTER_LEFT">
+                            <Label text="&#10007;" styleClass="stat-icon-text"/>
+                        </StackPane>
+                        <Label fx:id="labelAlfa" text="0" styleClass="stat-value"/>
+                        <Label text="Alfa" styleClass="stat-label"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Kartu Data Rekapitulasi -->
+                <VBox styleClass="card" spacing="14" VBox.vgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <VBox spacing="2" HBox.hgrow="ALWAYS">
+                            <Label text="Data Rekapitulasi" styleClass="card-title"/>
+                            <Label fx:id="labelJumlahData" text="Menampilkan 0 data" styleClass="card-subtitle"/>
+                        </VBox>
+                        <TextField fx:id="fieldPencarian" promptText="Cari nama siswa atau NIS..."
+                                   styleClass="text-field-rounded" prefWidth="260"/>
+                    </HBox>
+
+                    <StackPane>
+                        <TableView fx:id="tabelLaporan" styleClass="tabel-akun" prefHeight="420">
+                            <columns>
+                                <TableColumn fx:id="kolomNamaSiswa" text="Nama Siswa" prefWidth="190"/>
+                                <TableColumn fx:id="kolomNis" text="NIS" prefWidth="110"/>
+                                <TableColumn fx:id="kolomKelas" text="Kelas" prefWidth="110"/>
+                                <TableColumn fx:id="kolomTanggal" text="Tanggal" prefWidth="120"/>
+                                <TableColumn fx:id="kolomStatus" text="Status" prefWidth="110"/>
+                                <TableColumn fx:id="kolomWaktuScan" text="Waktu Scan" prefWidth="110"/>
+                                <TableColumn fx:id="kolomStatusMurid" text="Status Siswa" prefWidth="105"/>
+                                <TableColumn fx:id="kolomAksi" text="Aksi" prefWidth="145"/>
+                            </columns>
+                        </TableView>
+
+                        <TableView fx:id="tabelLaporanMapel" styleClass="tabel-akun" prefHeight="420"
+                                   managed="false" visible="false">
+                            <columns>
+                                <TableColumn fx:id="kolomMapelNamaSiswa" text="Nama Siswa" prefWidth="160"/>
+                                <TableColumn fx:id="kolomMapelNis" text="NIS" prefWidth="95"/>
+                                <TableColumn fx:id="kolomMapelKelas" text="Kelas" prefWidth="95"/>
+                                <TableColumn fx:id="kolomMapelMapel" text="Mata Pelajaran" prefWidth="150"/>
+                                <TableColumn fx:id="kolomMapelGuru" text="Guru Pengajar" prefWidth="150"/>
+                                <TableColumn fx:id="kolomMapelTanggal" text="Tanggal" prefWidth="105"/>
+                                <TableColumn fx:id="kolomMapelStatus" text="Status" prefWidth="100"/>
+                                <TableColumn fx:id="kolomMapelWaktuScan" text="Waktu Scan" prefWidth="100"/>
+                                <TableColumn fx:id="kolomMapelStatusMurid" text="Status Siswa" prefWidth="105"/>
+                                <TableColumn fx:id="kolomMapelAksi" text="Aksi" prefWidth="145"/>
+                            </columns>
+                        </TableView>
+                    </StackPane>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="800.0" prefWidth="1280.0"
+            styleClass="dashboard-root"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.nurulislam.siap.controller.JadwalGuruController">
+
+    <left>
+        <VBox prefWidth="240.0" styleClass="sidebar" spacing="4">
+            <padding>
+                <Insets top="20" right="16" bottom="20" left="16"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <padding>
+                    <Insets bottom="20" top="4"/>
+                </padding>
+                <StackPane styleClass="brand-icon">
+                    <Label text="S" styleClass="brand-icon-text"/>
+                </StackPane>
+                <VBox spacing="1">
+                    <Label text="SIAP" styleClass="sidebar-brand"/>
+                    <Label text="Teacher Portal" styleClass="sidebar-brand-sub"/>
+                </VBox>
+            </HBox>
+
+            <Button fx:id="btnNavBeranda"
+                    text="Beranda"
+                    styleClass="nav-item"
+                    maxWidth="Infinity"/>
+
+            <Button fx:id="btnNavJadwal"
+                    text="Jadwal Mengajar"
+                    styleClass="nav-item, nav-item-active"
+                    maxWidth="Infinity"/>
+
+            <Button fx:id="btnNavAbsensiMapel"
+                    text="Absensi Mata Pelajaran"
+                    styleClass="nav-item"
+                    maxWidth="Infinity"/>
+
+            <Button fx:id="btnNavLaporan"
+                    text="Laporan"
+                    styleClass="nav-item"
+                    maxWidth="Infinity"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <VBox styleClass="system-status-box" spacing="4">
+                <Label text="Jadwal Read-Only"
+                       styleClass="system-status-text"/>
+            </VBox>
+
+            <Hyperlink fx:id="linkLogout"
+                       text="Logout"
+                       styleClass="link-logout"/>
+        </VBox>
+    </left>
+
+    <center>
+        <ScrollPane fitToWidth="true"
+                    styleClass="dashboard-scroll">
+
+            <VBox styleClass="dashboard-body" spacing="20">
+                <padding>
+                    <Insets top="24" right="32" bottom="32" left="32"/>
+                </padding>
+
+                <HBox alignment="CENTER_LEFT" spacing="16">
+                    <VBox spacing="2">
+                        <Label text="Jadwal Mengajar"
+                               styleClass="topbar-title"/>
+                        <Label text="Jadwal Anda untuk pengingat mengajar"
+                               styleClass="greeting-caption"/>
+                    </VBox>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <VBox styleClass="date-chip"
+                          alignment="CENTER_LEFT">
+                        <Label fx:id="labelTanggal"
+                               text="Senin, 24 Mei 2024"
+                               styleClass="date-chip-text"/>
+                    </VBox>
+
+                    <VBox alignment="CENTER_RIGHT"
+                          spacing="1">
+                        <Label fx:id="labelNamaUser"
+                               text="Guru"
+                               styleClass="user-name"/>
+                        <Label fx:id="labelRoleUser"
+                               text="Guru Mata Pelajaran"
+                               styleClass="user-role"/>
+                    </VBox>
+
+                    <StackPane styleClass="avatar-circle">
+                        <Label fx:id="labelInisialUser"
+                               text="G"
+                               styleClass="avatar-text"/>
+                    </StackPane>
+                </HBox>
+
+                <HBox spacing="16">
+                    <VBox styleClass="stat-card, stat-card-green"
+                          HBox.hgrow="ALWAYS"
+                          spacing="8">
+                        <Label text="Jadwal"
+                               styleClass="stat-label"/>
+                        <Label fx:id="labelJumlahJadwal"
+                               text="0"
+                               styleClass="stat-value"/>
+                        <Label text="Jadwal mengajar pada tahun ajaran aktif"
+                               styleClass="stat-caption"/>
+                    </VBox>
+                </HBox>
+
+                <VBox styleClass="card" spacing="12">
+                    <HBox alignment="CENTER_LEFT">
+                        <VBox spacing="2" HBox.hgrow="ALWAYS">
+                            <Label text="Daftar Jadwal Mengajar"
+                                   styleClass="card-title"/>
+                            <Label fx:id="labelStatusInfo"
+                                   text="Memuat jadwal..."
+                                   styleClass="greeting-caption"/>
+                        </VBox>
+                    </HBox>
+
+                    <Separator/>
+
+                    <TableView fx:id="tabelJadwal"
+                               editable="false"
+                               prefHeight="560.0"
+>
+
+                        <columns>
+                            <TableColumn fx:id="kolomHari"
+                                         text="Hari"
+                                         prefWidth="130.0"/>
+
+                            <TableColumn fx:id="kolomJam"
+                                         text="Jam"
+                                         prefWidth="150.0"/>
+
+                            <TableColumn fx:id="kolomMapel"
+                                         text="Mata Pelajaran"
+                                         prefWidth="220.0"/>
+
+                            <TableColumn fx:id="kolomKelas"
+                                         text="Kelas"
+                                         prefWidth="150.0"/>
+
+                            <TableColumn fx:id="kolomGuru"
+                                         text="Guru"
+                                         prefWidth="180.0"/>
+
+                            <TableColumn fx:id="kolomStatus"
+                                         text="Status"
+                                         prefWidth="140.0"/>
+                        </columns>
+                    </TableView>
+
+                    <Label text="Catatan: Guru hanya dapat melihat jadwal. Tambah, ubah, dan hapus jadwal dikelola oleh Staf TU."
+                           styleClass="log-waktu"
+                           wrapText="true"/>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

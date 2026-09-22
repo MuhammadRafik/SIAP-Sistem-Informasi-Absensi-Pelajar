@@ -1,0 +1,38 @@
+# Maven build output
+target/
+dependency-reduced-pom.xml
+
+# Compiled class files
+*.class
+
+# NetBeans
+nbproject/private/
+nbproject/Makefile-*.mk
+nbproject/Package-*.bash
+build/
+dist/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

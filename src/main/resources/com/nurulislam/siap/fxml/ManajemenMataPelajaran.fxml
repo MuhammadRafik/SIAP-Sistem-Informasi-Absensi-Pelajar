@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="900.0" prefWidth="1320.0" styleClass="dashboard-root"
+            xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.nurulislam.siap.controller.ManajemenMataPelajaranController">
+
+    <!-- ================= Sidebar kiri (sama seperti Dashboard) ================= -->
+    <left>
+        <VBox prefWidth="240.0" styleClass="sidebar" spacing="4">
+            <padding>
+                <Insets top="20" right="16" bottom="20" left="16"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <padding>
+                    <Insets bottom="20" top="4"/>
+                </padding>
+                <StackPane styleClass="brand-icon">
+                    <Label text="S" styleClass="brand-icon-text"/>
+                </StackPane>
+                <VBox spacing="1">
+                    <Label text="SIAP" styleClass="sidebar-brand"/>
+                    <Label text="School Admin System" styleClass="sidebar-brand-sub"/>
+                </VBox>
+            </HBox>
+
+            <Button fx:id="btnNavDashboard" text="Dashboard" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavVerifikasi" text="Verifikasi Akun" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavScanQr" text="Scan QR" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavDataMurid" text="Data Murid" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavDataKelas" text="Data Kelas" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavMataPelajaran" text="Mata Pelajaran" styleClass="nav-item, nav-item-active" maxWidth="Infinity"/>
+            <Button fx:id="btnNavCetakKartu" text="Cetak Kartu Pelajar" styleClass="nav-item" maxWidth="Infinity"/>
+            <Button fx:id="btnNavLaporan" text="Laporan" styleClass="nav-item" maxWidth="Infinity"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <VBox styleClass="system-status-box" spacing="4">
+                <Label text="System Status: Active" styleClass="system-status-text"/>
+            </VBox>
+
+            <Hyperlink fx:id="linkLogout" text="Logout" styleClass="link-logout"/>
+        </VBox>
+    </left>
+
+    <!-- ================= Konten utama ================= -->
+    <center>
+        <HBox>
+            <!-- Kolom kiri: ringkasan + daftar mapel + jadwal + pratinjau mingguan -->
+            <ScrollPane fitToWidth="true" styleClass="dashboard-scroll" HBox.hgrow="ALWAYS">
+                <VBox styleClass="dashboard-body" spacing="20">
+                    <padding>
+                        <Insets top="24" right="24" bottom="32" left="32"/>
+                    </padding>
+
+                    <!-- Top bar -->
+                    <HBox alignment="CENTER_LEFT" spacing="16">
+                        <VBox spacing="2">
+                            <Label text="Mata Pelajaran &amp; Jadwal Mengajar" styleClass="topbar-title"/>
+                            <Label text="Kelola kurikulum, penugasan guru pengampu, dan jadwal mengajar"
+                                   styleClass="greeting-caption"/>
+                        </VBox>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <VBox alignment="CENTER_RIGHT" spacing="1">
+                            <Label fx:id="labelNamaUser" text="Admin User" styleClass="user-name"/>
+                            <Label fx:id="labelRoleUser" text="School Administrator" styleClass="user-role"/>
+                        </VBox>
+                        <StackPane styleClass="avatar-circle">
+                            <Label fx:id="labelInisialUser" text="A" styleClass="avatar-text"/>
+                        </StackPane>
+                    </HBox>
+
+                    <!-- Kartu ringkasan -->
+                    <HBox spacing="16">
+                        <VBox styleClass="stat-card, stat-card-green" HBox.hgrow="ALWAYS" spacing="10">
+                            <StackPane styleClass="stat-icon, stat-icon-green" alignment="CENTER_LEFT">
+                                <Label text="&#128218;" styleClass="stat-icon-text"/>
+                            </StackPane>
+                            <Label fx:id="labelTotalMapel" text="0" styleClass="stat-value"/>
+                            <Label text="Total Mata Pelajaran" styleClass="stat-label"/>
+                        </VBox>
+
+                        <VBox styleClass="stat-card, stat-card-teal" HBox.hgrow="ALWAYS" spacing="10">
+                            <StackPane styleClass="stat-icon, stat-icon-teal" alignment="CENTER_LEFT">
+                                <Label text="&#128197;" styleClass="stat-icon-text"/>
+                            </StackPane>
+                            <Label fx:id="labelTotalJadwal" text="0" styleClass="stat-value"/>
+                            <Label text="Total Jadwal Mengajar" styleClass="stat-label"/>
+                        </VBox>
+
+                        <VBox styleClass="stat-card, stat-card-orange" HBox.hgrow="ALWAYS" spacing="10">
+                            <StackPane styleClass="stat-icon, stat-icon-orange" alignment="CENTER_LEFT">
+                                <Label text="&#9888;" styleClass="stat-icon-text"/>
+                            </StackPane>
+                            <Label fx:id="labelJadwalBentrok" text="0" styleClass="stat-value"/>
+                            <Label text="Jadwal Bentrok" styleClass="stat-label"/>
+                        </VBox>
+                    </HBox>
+
+                    <Label fx:id="errorLabel" styleClass="error-label" wrapText="true"/>
+
+                    <!-- Kartu Daftar Mata Pelajaran -->
+                    <VBox styleClass="card" spacing="14">
+                        <VBox spacing="2">
+                            <Label text="Daftar Mata Pelajaran" styleClass="card-title"/>
+                            <Label text="Kode dan nama mata pelajaran yang tersedia di kurikulum" styleClass="card-subtitle"/>
+                        </VBox>
+
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <TextField fx:id="fieldKodeMapelBaru" promptText="Kode (contoh: MAT-10)"
+                                       styleClass="text-field-rounded" prefWidth="180"/>
+                            <TextField fx:id="fieldNamaMapelBaru" promptText="Nama mata pelajaran"
+                                       styleClass="text-field-rounded" HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="btnSimpanMapel" text="Simpan" styleClass="btn-primary"/>
+                            <Button fx:id="btnBatalMapel" text="Batal" styleClass="btn-secondary"/>
+                        </HBox>
+                        <Label fx:id="mapelFormErrorLabel" styleClass="error-label" wrapText="true"/>
+
+                        <TableView fx:id="tabelMapel" styleClass="tabel-akun" prefHeight="180">
+                            <columns>
+                                <TableColumn fx:id="kolomKodeMapel" text="Kode" prefWidth="120"/>
+                                <TableColumn fx:id="kolomNamaMapel" text="Mata Pelajaran" prefWidth="300"/>
+                            </columns>
+                        </TableView>
+
+                        <HBox alignment="CENTER_RIGHT" spacing="10">
+                            <Button fx:id="btnHapusMapel" text="Hapus" styleClass="btn-danger"/>
+                            <Button fx:id="btnUbahMapel" text="Ubah" styleClass="btn-secondary"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Kartu Jadwal Mengajar -->
+                    <VBox styleClass="card" spacing="14">
+                        <HBox alignment="CENTER" spacing="10">
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="Jadwal Mengajar" styleClass="card-title"/>
+                                <Label text="Penugasan guru pengampu per kelas, hari, dan jam"
+                                       styleClass="card-subtitle"/>
+                            </VBox>
+                            <TextField fx:id="fieldPencarianJadwal" promptText="Cari mata pelajaran atau guru..."
+                                       styleClass="text-field-rounded" prefWidth="260"/>
+                            <Button fx:id="btnRefreshJadwal" text="Muat Ulang" styleClass="btn-secondary"/>
+                            <Button fx:id="btnTambahJadwal" text="+ Tambah Jadwal" styleClass="btn-primary"/>
+                        </HBox>
+
+                        <TableView fx:id="tabelJadwal" styleClass="tabel-akun" prefHeight="320">
+                            <columns>
+                                <TableColumn fx:id="kolomJadwalMapel" text="Mata Pelajaran" prefWidth="170"/>
+                                <TableColumn fx:id="kolomJadwalGuru" text="Guru Pengampu" prefWidth="170"/>
+                                <TableColumn fx:id="kolomJadwalKelas" text="Kelas" prefWidth="110"/>
+                                <TableColumn fx:id="kolomJadwalHari" text="Hari" prefWidth="90"/>
+                                <TableColumn fx:id="kolomJadwalJam" text="Jam" prefWidth="130"/>
+                                <TableColumn fx:id="kolomJadwalStatus" text="Status" prefWidth="100"/>
+                            </columns>
+                        </TableView>
+
+                        <HBox alignment="CENTER_RIGHT" spacing="10">
+                            <Button fx:id="btnHapusJadwal" text="Hapus" styleClass="btn-danger"/>
+                            <Button fx:id="btnUbahJadwal" text="Ubah" styleClass="btn-secondary"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Kartu Pratinjau Jadwal Mingguan -->
+                    <VBox styleClass="card" spacing="14">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                                <Label text="Pratinjau Jadwal Mingguan" styleClass="card-title"/>
+                                <Label text="Visualisasi alokasi waktu dan deteksi konflik jadwal"
+                                       styleClass="card-subtitle"/>
+                            </VBox>
+                            <HBox alignment="CENTER_LEFT" spacing="6">
+                                <Region styleClass="legend-dot-normal"/>
+                                <Label text="Normal" styleClass="legend-text"/>
+                            </HBox>
+                            <HBox alignment="CENTER_LEFT" spacing="6">
+                                <Region styleClass="legend-dot-bentrok"/>
+                                <Label text="Bentrok" styleClass="legend-text"/>
+                            </HBox>
+                        </HBox>
+
+                        <ScrollPane fitToWidth="true" styleClass="jadwal-grid-scroll" prefHeight="360">
+                            <VBox fx:id="containerJadwalMingguan" spacing="0"/>
+                        </ScrollPane>
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+
+            <!-- Kolom kanan: form tambah/ubah jadwal mengajar -->
+            <VBox styleClass="form-panel" prefWidth="320" minWidth="300" spacing="16">
+                <padding>
+                    <Insets top="24" right="24" bottom="24" left="20"/>
+                </padding>
+
+                <VBox spacing="2">
+                    <Label fx:id="labelJudulFormJadwal" text="Form Jadwal" styleClass="card-title"/>
+                    <Label text="Tambah atau ubah jadwal mengajar" styleClass="card-subtitle"/>
+                </VBox>
+
+                <VBox spacing="6">
+                    <Label text="Mata Pelajaran" styleClass="field-label"/>
+                    <ComboBox fx:id="comboMapel" styleClass="combo-rounded" maxWidth="Infinity"
+                              promptText="Pilih mata pelajaran"/>
+                </VBox>
+
+                <VBox spacing="6">
+                    <Label text="Guru Pengampu" styleClass="field-label"/>
+                    <ComboBox fx:id="comboGuru" styleClass="combo-rounded" maxWidth="Infinity"
+                              promptText="Pilih guru"/>
+                </VBox>
+
+                <VBox spacing="6">
+                    <Label text="Kelas" styleClass="field-label"/>
+                    <ComboBox fx:id="comboKelasJadwal" styleClass="combo-rounded" maxWidth="Infinity"
+                              promptText="Pilih kelas"/>
+                </VBox>
+
+                <VBox spacing="6">
+                    <Label text="Hari" styleClass="field-label"/>
+                    <ComboBox fx:id="comboHari" styleClass="combo-rounded" maxWidth="Infinity"
+                              promptText="Pilih hari"/>
+                </VBox>
+
+                <HBox spacing="10">
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Jam Mulai" styleClass="field-label"/>
+                        <TextField fx:id="fieldJamMulai" promptText="07:30" styleClass="text-field-rounded"/>
+                    </VBox>
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+                        <Label text="Jam Selesai" styleClass="field-label"/>
+                        <TextField fx:id="fieldJamSelesai" promptText="09:00" styleClass="text-field-rounded"/>
+                    </VBox>
+                </HBox>
+
+                <VBox spacing="6">
+                    <Label text="Tahun Ajaran" styleClass="field-label"/>
+                    <ComboBox fx:id="comboTahunAjaranJadwal" styleClass="combo-rounded" maxWidth="Infinity"
+                              promptText="Pilih tahun ajaran"/>
+                </VBox>
+
+                <Label fx:id="jadwalFormErrorLabel" styleClass="error-label" wrapText="true"/>
+
+                <VBox spacing="10">
+                    <Button fx:id="btnSimpanJadwal" text="Simpan" styleClass="btn-primary" maxWidth="Infinity"/>
+                    <Button fx:id="btnBatalJadwal" text="Batal" styleClass="btn-secondary" maxWidth="Infinity"/>
+                </VBox>
+
+                <VBox styleClass="tip-box" spacing="6">
+                    <Label text="TIPS" styleClass="tip-title"/>
+                    <Label text="Format jam bebas pakai titik dua atau titik (07:30 atau 07.30). Sistem otomatis menolak jadwal yang bentrok - guru atau kelas yang sama tidak boleh punya dua jadwal beririsan waktu di hari yang sama."
+                           wrapText="true" styleClass="tip-text"/>
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>
