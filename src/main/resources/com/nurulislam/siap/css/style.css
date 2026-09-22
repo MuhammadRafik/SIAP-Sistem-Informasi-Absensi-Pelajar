@@ -288,13 +288,6 @@
     -fx-font-weight: bold;
 }
 
-.link-logout {
-    -fx-text-fill: #ba1a1a;
-    -fx-font-size: 13px;
-    -fx-font-weight: bold;
-    -fx-padding: 10 0 0 12;
-}
-
 /* --- Top bar --- */
 
 .topbar-title {
@@ -409,23 +402,6 @@
 .stat-icon-text {
     -fx-font-weight: bold;
     -fx-text-fill: #006a65;
-}
-
-.stat-badge {
-    -fx-font-size: 11px;
-    -fx-font-weight: bold;
-    -fx-background-radius: 999;
-    -fx-padding: 3 8 3 8;
-}
-
-.stat-badge-up {
-    -fx-text-fill: #006a65;
-    -fx-background-color: #e0f6f4;
-}
-
-.stat-badge-down {
-    -fx-text-fill: #ba1a1a;
-    -fx-background-color: #ffdad6;
 }
 
 .stat-value {

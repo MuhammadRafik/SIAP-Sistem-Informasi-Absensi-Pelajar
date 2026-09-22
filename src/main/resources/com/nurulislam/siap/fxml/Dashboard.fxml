@@ -75,8 +75,8 @@
                         <Label fx:id="labelTanggal" text="Senin, 24 Mei 2024" styleClass="date-chip-text"/>
                     </VBox>
                     <VBox alignment="CENTER_RIGHT" spacing="1">
-                        <Label fx:id="labelNamaUser" text="Admin User" styleClass="user-name"/>
-                        <Label fx:id="labelRoleUser" text="School Administrator" styleClass="user-role"/>
+                        <Label fx:id="labelNamaUser" text="Memuat…" styleClass="user-name"/>
+                        <Label fx:id="labelRoleUser" text="" styleClass="user-role"/>
                     </VBox>
                     <StackPane fx:id="avatarBox" styleClass="avatar-circle">
                         <ImageView fx:id="imgAvatar" fitWidth="40" fitHeight="40" preserveRatio="false"/>
@@ -134,7 +134,7 @@
                     <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="12">
                         <HBox alignment="CENTER_LEFT" spacing="10">
                             <VBox HBox.hgrow="ALWAYS" spacing="2">
-                                <Label text="Weekly Attendance Trend" styleClass="card-title"/>
+                                <Label text="Tren Kehadiran Mingguan" styleClass="card-title"/>
                                 <Label text="Data kehadiran 7 hari terakhir" styleClass="card-subtitle"/>
                             </VBox>
                             <ComboBox fx:id="comboRentangWaktu" styleClass="combo-rounded" prefWidth="150"/>
@@ -160,23 +160,23 @@
                     </VBox>
                 </HBox>
 
-                <!-- Quick actions & pengumuman -->
+                <!-- Aksi cepat & panduan -->
                 <HBox spacing="20">
                     <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="14">
-                        <Label text="Quick Actions" styleClass="card-title"/>
+                        <Label text="Aksi Cepat" styleClass="card-title"/>
                         <HBox spacing="14">
                             <Button fx:id="btnTambahMurid" text="Tambah Murid" styleClass="quick-action-btn" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                            <Button fx:id="btnExportLaporan" text="Export Laporan" styleClass="quick-action-btn" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                            <Button fx:id="btnKonfigurasi" text="Konfigurasi" styleClass="quick-action-btn" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <Button fx:id="btnExportLaporan" text="Laporan Kehadiran" styleClass="quick-action-btn" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                            <Button fx:id="btnKonfigurasi" text="Mata Pelajaran" styleClass="quick-action-btn" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
                         </HBox>
                     </VBox>
 
                     <VBox styleClass="announcement-card" prefWidth="340" minWidth="320" spacing="10">
-                        <Label text="Pengumuman Sistem" styleClass="announcement-title"/>
-                        <Label text="Maintenance server dijadwalkan pada hari Sabtu, 29 Mei pukul 23.00 WIB. Harap simpan semua data sebelum waktu tersebut."
+                        <Label text="Panduan Singkat" styleClass="announcement-title"/>
+                        <Label text="Gunakan halaman Scan QR setiap pagi untuk mencatat kehadiran harian, dan halaman Absensi Mata Pelajaran untuk kehadiran per jam pelajaran."
                                wrapText="true" styleClass="announcement-text"/>
                         <Region VBox.vgrow="ALWAYS"/>
-                        <Button fx:id="btnBacaSelengkapnya" text="Baca Selengkapnya" styleClass="btn-on-announcement"/>
+                        <Button fx:id="btnBacaSelengkapnya" text="Lihat Laporan" styleClass="btn-on-announcement"/>
                     </VBox>
                 </HBox>
             </VBox>

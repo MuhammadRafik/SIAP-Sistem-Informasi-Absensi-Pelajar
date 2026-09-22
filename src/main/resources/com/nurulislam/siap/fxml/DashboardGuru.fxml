@@ -67,8 +67,8 @@
                         <Label fx:id="labelTanggal" text="Senin, 24 Mei 2024" styleClass="date-chip-text"/>
                     </VBox>
                     <VBox alignment="CENTER_RIGHT" spacing="1">
-                        <Label fx:id="labelNamaUser" text="Guru" styleClass="user-name"/>
-                        <Label fx:id="labelRoleUser" text="Guru Mata Pelajaran" styleClass="user-role"/>
+                        <Label fx:id="labelNamaUser" text="Memuat…" styleClass="user-name"/>
+                        <Label fx:id="labelRoleUser" text="" styleClass="user-role"/>
                     </VBox>
                     <StackPane fx:id="avatarBox" styleClass="avatar-circle">
                         <ImageView fx:id="imgAvatar" fitWidth="40" fitHeight="40" preserveRatio="false"/>
@@ -140,9 +140,9 @@
                     </VBox>
                 </HBox>
 
-                <!-- Quick Actions -->
+                <!-- Aksi Cepat -->
                 <VBox styleClass="card" spacing="14">
-                    <Label text="Quick Actions" styleClass="card-title"/>
+                    <Label text="Aksi Cepat" styleClass="card-title"/>
                     <HBox spacing="14">
                         <Button fx:id="btnMulaiScan" text="Mulai Absensi" styleClass="quick-action-btn" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
                         <Button fx:id="btnLihatLaporan" text="Lihat Laporan" styleClass="quick-action-btn" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>

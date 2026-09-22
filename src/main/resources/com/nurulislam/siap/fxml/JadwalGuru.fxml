@@ -98,10 +98,10 @@
                     <VBox alignment="CENTER_RIGHT"
                           spacing="1">
                         <Label fx:id="labelNamaUser"
-                               text="Guru"
+                               text="Memuat…"
                                styleClass="user-name"/>
                         <Label fx:id="labelRoleUser"
-                               text="Guru Mata Pelajaran"
+                               text=""
                                styleClass="user-role"/>
                     </VBox>
 

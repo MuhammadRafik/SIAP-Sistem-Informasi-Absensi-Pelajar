@@ -54,7 +54,7 @@
             <Region VBox.vgrow="ALWAYS"/>
 
             <VBox styleClass="system-status-box" spacing="4">
-                <Label text="System Status: Active" styleClass="system-status-text"/>
+                <Label text="Sistem Aktif" styleClass="system-status-text"/>
             </VBox>
         </VBox>
     </left>
@@ -77,8 +77,8 @@
                     </VBox>
                     <Region HBox.hgrow="ALWAYS"/>
                     <VBox alignment="CENTER_RIGHT" spacing="1">
-                        <Label fx:id="labelNamaUser" text="Admin User" styleClass="user-name"/>
-                        <Label fx:id="labelRoleUser" text="School Administrator" styleClass="user-role"/>
+                        <Label fx:id="labelNamaUser" text="Memuat…" styleClass="user-name"/>
+                        <Label fx:id="labelRoleUser" text="" styleClass="user-role"/>
                     </VBox>
                     <StackPane fx:id="avatarBox" styleClass="avatar-circle">
                         <ImageView fx:id="imgAvatar" fitWidth="40" fitHeight="40" preserveRatio="false"/>

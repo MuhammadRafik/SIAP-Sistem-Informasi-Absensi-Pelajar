@@ -71,7 +71,7 @@
                         <Label fx:id="labelTanggal" text="Senin, 24 Mei 2024" styleClass="date-chip-text"/>
                     </VBox>
                     <VBox alignment="CENTER_RIGHT" spacing="1">
-                        <Label fx:id="labelNamaUser" text="Pengguna" styleClass="user-name"/>
+                        <Label fx:id="labelNamaUser" text="Memuat…" styleClass="user-name"/>
                         <Label fx:id="labelRoleUser" text="" styleClass="user-role"/>
                     </VBox>
                     <StackPane fx:id="avatarBox" styleClass="avatar-circle">
