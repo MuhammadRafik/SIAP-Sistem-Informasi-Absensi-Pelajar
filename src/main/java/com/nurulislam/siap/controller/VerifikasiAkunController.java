@@ -26,13 +26,10 @@ import java.util.Optional;
 
 /**
  * Controller untuk halaman "Verifikasi Akun", khusus diakses oleh Staf TU.
- * Menampilkan daftar akun berstatus MENUNGGU_VERIFIKASI (hasil "Daftar Akun")
- * dan memungkinkan TU untuk:
- *   - Verifikasi  -> status_akun diubah menjadi AKTIF (akun bisa dipakai login)
- *   - Tolak       -> akun dihapus (pendaftaran dianggap tidak sah / bukan
- *                    bagian dari sekolah), bukan sekadar dinonaktifkan.
- *                    NONAKTIF dipakai untuk menonaktifkan akun yang sudah
- *                    pernah aktif, bukan menolak pendaftaran baru.
+ * Tiga tab status mengatur daftar yang ditampilkan:
+ *   - Menunggu Verifikasi -> Verifikasi (jadi AKTIF) atau Tolak (hapus pendaftaran)
+ *   - Terverifikasi       -> Nonaktifkan akun AKTIF yang sudah tidak dipakai
+ *   - Nonaktif            -> Aktifkan Kembali akun NONAKTIF
  * <p>
  * Tersedia filter peran (Semua / Guru Mata Pelajaran / Staf TU) supaya TU bisa
  * fokus memverifikasi satu jenis akun saja, misalnya khusus akun Guru yang
@@ -58,6 +55,10 @@ public class VerifikasiAkunController {
     @FXML private Label labelRoleUser;
     @FXML private Label labelInisialUser;
 
+    @FXML private ToggleButton tabStatusMenunggu;
+    @FXML private ToggleButton tabStatusTerverifikasi;
+    @FXML private ToggleButton tabStatusNonaktif;
+
     @FXML private ToggleButton tabSemua;
     @FXML private ToggleButton tabGuru;
     @FXML private ToggleButton tabTU;
@@ -71,19 +72,24 @@ public class VerifikasiAkunController {
     @FXML private Label errorLabel;
     @FXML private Button btnVerifikasi;
     @FXML private Button btnTolak;
+    @FXML private Button btnNonaktifkan;
+    @FXML private Button btnAktifkanKembali;
     @FXML private Button btnRefresh;
 
     private static final DateTimeFormatter FORMAT_TANGGAL = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     private final PenggunaDAO penggunaDAO = new PenggunaDAO();
 
-    /** Menyimpan seluruh akun MENUNGGU_VERIFIKASI dari database (belum difilter peran). */
-    private final ObservableList<Pengguna> semuaMenunggu = FXCollections.observableArrayList();
+    /** Menyimpan seluruh akun pada tab status aktif (belum difilter peran). */
+    private final ObservableList<Pengguna> semuaAkun = FXCollections.observableArrayList();
     /** Daftar yang benar-benar ditampilkan di tabel, hasil filter peran aktif. */
     private final ObservableList<Pengguna> daftarTampil = FXCollections.observableArrayList();
 
     private ToggleGroup grupFilter;
     private Role filterRoleAktif = null; // null = tampilkan semua peran
+
+    private ToggleGroup grupStatus;
+    private StatusAkun filterStatusAktif = StatusAkun.MENUNGGU_VERIFIKASI;
 
     @FXML
     public void initialize() {
@@ -91,23 +97,23 @@ public class VerifikasiAkunController {
         errorLabel.setText("");
         isiInfoPengguna();
         siapkanSidebar();
+        siapkanFilterStatus();
         siapkanFilterPeran();
         siapkanTabel();
 
-        btnVerifikasi.setDisable(true);
-        btnTolak.setDisable(true);
         tabelAkun.getSelectionModel().selectedItemProperty().addListener((obs, lama, baru) -> {
-            boolean adaTerpilih = baru != null;
-            btnVerifikasi.setDisable(!adaTerpilih);
-            btnTolak.setDisable(!adaTerpilih);
+            perbaruiTombolAksi();
         });
 
         btnVerifikasi.setOnAction(e -> handleVerifikasi());
         btnTolak.setOnAction(e -> handleTolak());
+        btnNonaktifkan.setOnAction(e -> handleNonaktifkan());
+        btnAktifkanKembali.setOnAction(e -> handleAktifkanKembali());
         btnRefresh.setOnAction(e -> muatDaftarAkun());
         ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
         AvatarUtil.tampilkan(avatarBox, imgAvatar, labelInisialUser);
 
+        perbaruiTombolAksi();
         muatDaftarAkun();
     }
 
@@ -138,6 +144,73 @@ public class VerifikasiAkunController {
         btnNavMataPelajaran.setOnAction(e -> bukaMataPelajaran());
         btnNavCetakKartu.setOnAction(e -> bukaCetakKartu());
         btnNavLaporan.setOnAction(e -> bukaLaporan());
+    }
+
+    private void siapkanFilterStatus() {
+        grupStatus = new ToggleGroup();
+        tabStatusMenunggu.setToggleGroup(grupStatus);
+        tabStatusTerverifikasi.setToggleGroup(grupStatus);
+        tabStatusNonaktif.setToggleGroup(grupStatus);
+        tabStatusMenunggu.setSelected(true);
+
+        grupStatus.selectedToggleProperty().addListener((obs, lama, baru) -> {
+            // Minimal satu tab harus tetap terpilih (tidak boleh semua ter-unselect).
+            if (baru == null) {
+                grupStatus.selectToggle(lama != null ? lama : tabStatusMenunggu);
+                return;
+            }
+
+            perbaruiGayaTabStatus();
+
+            if (baru == tabStatusTerverifikasi) {
+                filterStatusAktif = StatusAkun.AKTIF;
+            } else if (baru == tabStatusNonaktif) {
+                filterStatusAktif = StatusAkun.NONAKTIF;
+            } else {
+                filterStatusAktif = StatusAkun.MENUNGGU_VERIFIKASI;
+            }
+            tabelAkun.getSelectionModel().clearSelection();
+            perbaruiTombolAksi();
+            muatDaftarAkun();
+        });
+
+        perbaruiGayaTabStatus();
+    }
+
+    private void perbaruiGayaTabStatus() {
+        for (ToggleButton tab : List.of(tabStatusMenunggu, tabStatusTerverifikasi, tabStatusNonaktif)) {
+            tab.getStyleClass().remove("filter-tab-active");
+            if (tab.isSelected()) {
+                tab.getStyleClass().add("filter-tab-active");
+            }
+        }
+    }
+
+    /**
+     * Menampilkan tombol aksi sesuai tab status aktif dan mengaktifkan/
+     * menonaktifkannya sesuai ada tidaknya baris terpilih.
+     */
+    private void perbaruiTombolAksi() {
+        boolean adaTerpilih = tabelAkun.getSelectionModel().getSelectedItem() != null;
+
+        boolean tabMenunggu = filterStatusAktif == StatusAkun.MENUNGGU_VERIFIKASI;
+        boolean tabAktif = filterStatusAktif == StatusAkun.AKTIF;
+
+        btnVerifikasi.setVisible(tabMenunggu);
+        btnVerifikasi.setManaged(tabMenunggu);
+        btnTolak.setVisible(tabMenunggu);
+        btnTolak.setManaged(tabMenunggu);
+
+        btnNonaktifkan.setVisible(tabAktif);
+        btnNonaktifkan.setManaged(tabAktif);
+
+        btnAktifkanKembali.setVisible(!tabMenunggu && !tabAktif);
+        btnAktifkanKembali.setManaged(!tabMenunggu && !tabAktif);
+
+        btnVerifikasi.setDisable(!adaTerpilih);
+        btnTolak.setDisable(!adaTerpilih);
+        btnNonaktifkan.setDisable(!adaTerpilih);
+        btnAktifkanKembali.setDisable(!adaTerpilih);
     }
 
     private void siapkanFilterPeran() {
@@ -194,8 +267,8 @@ public class VerifikasiAkunController {
 
     private void muatDaftarAkun() {
         try {
-            List<Pengguna> hasil = penggunaDAO.findByStatus(StatusAkun.MENUNGGU_VERIFIKASI);
-            semuaMenunggu.setAll(hasil);
+            List<Pengguna> hasil = penggunaDAO.findByStatus(filterStatusAktif);
+            semuaAkun.setAll(hasil);
             terapkanFilter();
             errorLabel.setText("");
         } catch (SQLException e) {
@@ -206,13 +279,26 @@ public class VerifikasiAkunController {
 
     private void terapkanFilter() {
         if (filterRoleAktif == null) {
-            daftarTampil.setAll(semuaMenunggu);
+            daftarTampil.setAll(semuaAkun);
         } else {
-            daftarTampil.setAll(semuaMenunggu.stream()
+            daftarTampil.setAll(semuaAkun.stream()
                     .filter(p -> p.getRole() == filterRoleAktif)
                     .toList());
         }
-        labelJumlah.setText(daftarTampil.size() + " akun menunggu");
+        String satuan;
+        String statusLabel;
+        if (filterStatusAktif == StatusAkun.AKTIF) {
+            satuan = "akun terverifikasi";
+            statusLabel = "Tidak ada akun terverifikasi pada filter ini.";
+        } else if (filterStatusAktif == StatusAkun.NONAKTIF) {
+            satuan = "akun nonaktif";
+            statusLabel = "Tidak ada akun nonaktif pada filter ini.";
+        } else {
+            satuan = "akun menunggu";
+            statusLabel = "Tidak ada akun yang menunggu verifikasi.";
+        }
+        labelJumlah.setText(daftarTampil.size() + " " + satuan);
+        tabelAkun.setPlaceholder(new Label(statusLabel));
     }
 
     private void handleVerifikasi() {
@@ -251,7 +337,7 @@ public class VerifikasiAkunController {
         if (jawaban.isPresent() && jawaban.get() == ButtonType.OK) {
             try {
                 penggunaDAO.delete(terpilih.getPenggunaId());
-                semuaMenunggu.remove(terpilih);
+                semuaAkun.remove(terpilih);
                 terapkanFilter();
                 errorLabel.setText("");
             } catch (SQLException e) {
@@ -264,12 +350,50 @@ public class VerifikasiAkunController {
     private void ubahStatus(Pengguna pengguna, StatusAkun statusBaru) {
         try {
             penggunaDAO.updateStatusAkun(pengguna.getPenggunaId(), statusBaru);
-            semuaMenunggu.remove(pengguna);
+            semuaAkun.remove(pengguna);
             terapkanFilter();
             errorLabel.setText("");
         } catch (SQLException e) {
             errorLabel.setText("Gagal memperbarui status akun. Coba lagi.");
             System.err.println("[VerifikasiAkunController] SQLException: " + e.getMessage());
+        }
+    }
+
+    private void handleNonaktifkan() {
+        Pengguna terpilih = tabelAkun.getSelectionModel().getSelectedItem();
+        if (terpilih == null) {
+            return;
+        }
+
+        Alert konfirmasi = new Alert(Alert.AlertType.CONFIRMATION);
+        konfirmasi.setTitle("Nonaktifkan Akun");
+        konfirmasi.setHeaderText(null);
+        konfirmasi.setContentText("Nonaktifkan akun \"" + terpilih.getNama()
+                + "\" (" + terpilih.getEmail() + ")?\n"
+                + "Akun yang dinonaktifkan tidak bisa dipakai untuk masuk ke aplikasi.");
+
+        Optional<ButtonType> jawaban = konfirmasi.showAndWait();
+        if (jawaban.isPresent() && jawaban.get() == ButtonType.OK) {
+            ubahStatus(terpilih, StatusAkun.NONAKTIF);
+        }
+    }
+
+    private void handleAktifkanKembali() {
+        Pengguna terpilih = tabelAkun.getSelectionModel().getSelectedItem();
+        if (terpilih == null) {
+            return;
+        }
+
+        Alert konfirmasi = new Alert(Alert.AlertType.CONFIRMATION);
+        konfirmasi.setTitle("Aktifkan Kembali Akun");
+        konfirmasi.setHeaderText(null);
+        konfirmasi.setContentText("Aktifkan kembali akun \"" + terpilih.getNama()
+                + "\" (" + terpilih.getEmail() + ")?\n"
+                + "Setelah diaktifkan, akun ini bisa dipakai untuk masuk ke aplikasi.");
+
+        Optional<ButtonType> jawaban = konfirmasi.showAndWait();
+        if (jawaban.isPresent() && jawaban.get() == ButtonType.OK) {
+            ubahStatus(terpilih, StatusAkun.AKTIF);
         }
     }
 
