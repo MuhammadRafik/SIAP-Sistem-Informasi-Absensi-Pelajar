@@ -565,16 +565,19 @@
     -fx-font-weight: bold;
     -fx-padding: 8 18 8 18;
     -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0, 0, 1);
 }
 
 .filter-tab:hover {
     -fx-background-color: #f0f1f3;
+    -fx-border-color: #c9cdd1;
 }
 
 .filter-tab-active {
     -fx-background-color: #006a65;
     -fx-text-fill: white;
     -fx-border-color: #006a65;
+    -fx-effect: dropshadow(gaussian, rgba(0,106,101,0.35), 6, 0, 0, 2);
 }
 
 /* Tombol aksi kecil di dalam baris tabel: versi soft agar tidak menyala. */
