@@ -15,6 +15,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 
@@ -217,6 +218,7 @@ public class PengaturanAkunController {
     private void tampilkanFoto(String pathFoto) {
         if (pathFoto == null || pathFoto.isBlank()) {
             imgFoto.setImage(null);
+            imgFoto.setViewport(null);
             labelInisialFoto.setVisible(true);
             perbaruiInisial();
             return;
@@ -225,14 +227,15 @@ public class PengaturanAkunController {
             File berkas = new File(pathFoto);
             if (!berkas.exists()) {
                 imgFoto.setImage(null);
+                imgFoto.setViewport(null);
                 labelInisialFoto.setVisible(true);
                 perbaruiInisial();
                 return;
             }
-            imgFoto.setImage(new Image(berkas.toURI().toString()));
-            labelInisialFoto.setVisible(false);
+            pasangFoto(new Image(berkas.toURI().toString()));
         } catch (RuntimeException e) {
             imgFoto.setImage(null);
+            imgFoto.setViewport(null);
             labelInisialFoto.setVisible(true);
             perbaruiInisial();
             System.err.println("[PengaturanAkunController] Gagal memuat foto: " + e.getMessage());
@@ -241,12 +244,37 @@ public class PengaturanAkunController {
 
     private void tampilkanFotoPratinjau(File berkas) {
         try {
-            imgFoto.setImage(new Image(berkas.toURI().toString()));
-            labelInisialFoto.setVisible(false);
+            pasangFoto(new Image(berkas.toURI().toString()));
         } catch (RuntimeException e) {
             labelProfilError.setText("File gambar tidak dapat dibaca.");
             System.err.println("[PengaturanAkunController] Gagal membaca foto: " + e.getMessage());
         }
+    }
+
+    /**
+     * Memasang foto ke bingkai 96x96 dengan crop persegi dari tengah
+     * (cover), sehingga foto apa pun menyesuaikan bingkai tanpa melar
+     * dan tanpa meluber keluar lingkaran.
+     */
+    private void pasangFoto(Image gambar) {
+        if (gambar == null || gambar.isError()) {
+            imgFoto.setImage(null);
+            imgFoto.setViewport(null);
+            labelInisialFoto.setVisible(true);
+            perbaruiInisial();
+            return;
+        }
+        double lebar = gambar.getWidth();
+        double tinggi = gambar.getHeight();
+        if (lebar > 0 && tinggi > 0) {
+            double sisi = Math.min(lebar, tinggi);
+            imgFoto.setViewport(new Rectangle2D(
+                    (lebar - sisi) / 2, (tinggi - sisi) / 2, sisi, sisi));
+        } else {
+            imgFoto.setViewport(null);
+        }
+        imgFoto.setImage(gambar);
+        labelInisialFoto.setVisible(false);
     }
 
     private void perbaruiInisial() {
