@@ -399,11 +399,6 @@
 .stat-icon-orange { -fx-background-color: #ffe9df; }
 .stat-icon-red     { -fx-background-color: #ffdad6; }
 
-.stat-icon-text {
-    -fx-font-weight: bold;
-    -fx-text-fill: #006a65;
-}
-
 .stat-value {
     -fx-font-size: 28px;
     -fx-font-weight: bold;

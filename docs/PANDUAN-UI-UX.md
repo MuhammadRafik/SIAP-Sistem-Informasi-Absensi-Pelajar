@@ -62,7 +62,10 @@ oranye `#ffe9df`, merah `#ffdad6`.
 - Tombol nonaktif pudar (`:disabled`), input fokus bergaris teal.
 - Tabel `tabel-akun`: header terang, hover baris, seleksi teal, teks tetap gelap.
 - Scrollbar ramping; menu popup avatar + tooltip + dialog konfirmasi mengikuti tema.
-- Jangan menambah style inline di FXML kecuali nilai dinamis dari kode.
+- Ikon kartu statistik: vektor `SVGPath` (Material-style, 24 unit) dengan
+  `fill` mengikuti warna kartu (teal `#006a65`, oranye `#a43c12`,
+  merah `#ba1a1a`) — dilarang memakai glyph font/emoji agar tajam dan
+  selalu center di kotak 34px.
 
 ## 7. Halaman baru (checklist)
 
