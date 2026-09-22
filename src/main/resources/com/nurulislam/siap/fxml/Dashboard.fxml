@@ -37,7 +37,7 @@
                 </StackPane>
                 <VBox spacing="1">
                     <Label text="SIAP" styleClass="sidebar-brand"/>
-                    <Label text="School Admin System" styleClass="sidebar-brand-sub"/>
+                    <Label text="Sistem Informasi Absensi Pelajar" styleClass="sidebar-brand-sub" wrapText="true"/>
                 </VBox>
             </HBox>
 
@@ -55,8 +55,6 @@
             <VBox styleClass="system-status-box" spacing="4">
                 <Label fx:id="labelStatusDatabase" text="Memeriksa database..." styleClass="system-status-text, db-checking"/>
             </VBox>
-
-            <Hyperlink fx:id="linkLogout" text="Logout" styleClass="link-logout"/>
         </VBox>
     </left>
 
@@ -79,7 +77,7 @@
                         <Label fx:id="labelNamaUser" text="Admin User" styleClass="user-name"/>
                         <Label fx:id="labelRoleUser" text="School Administrator" styleClass="user-role"/>
                     </VBox>
-                    <StackPane styleClass="avatar-circle">
+                    <StackPane fx:id="avatarBox" styleClass="avatar-circle">
                         <Label fx:id="labelInisialUser" text="A" styleClass="avatar-text"/>
                     </StackPane>
                 </HBox>
@@ -93,52 +91,36 @@
                 <!-- Kartu statistik -->
                 <HBox spacing="16">
                     <VBox styleClass="stat-card, stat-card-green" HBox.hgrow="ALWAYS" spacing="10">
-                        <HBox alignment="CENTER_LEFT">
-                            <StackPane styleClass="stat-icon, stat-icon-green">
-                                <Label text="&#10003;" styleClass="stat-icon-text"/>
-                            </StackPane>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Label text="+12%" styleClass="stat-badge, stat-badge-up"/>
-                        </HBox>
+                        <StackPane styleClass="stat-icon, stat-icon-green" alignment="CENTER_LEFT">
+                            <Label text="&#10003;" styleClass="stat-icon-text"/>
+                        </StackPane>
                         <Label fx:id="labelTotalHadir" text="1,248" styleClass="stat-value"/>
                         <Label text="Total Hadir" styleClass="stat-label"/>
                         <Label text="Siswa tercatat masuk hari ini" styleClass="stat-caption"/>
                     </VBox>
 
                     <VBox styleClass="stat-card, stat-card-teal" HBox.hgrow="ALWAYS" spacing="10">
-                        <HBox alignment="CENTER_LEFT">
-                            <StackPane styleClass="stat-icon, stat-icon-teal">
-                                <Label text="i" styleClass="stat-icon-text"/>
-                            </StackPane>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Label text="-2%" styleClass="stat-badge, stat-badge-down"/>
-                        </HBox>
+                        <StackPane styleClass="stat-icon, stat-icon-teal" alignment="CENTER_LEFT">
+                            <Label text="i" styleClass="stat-icon-text"/>
+                        </StackPane>
                         <Label fx:id="labelIzinSakit" text="42" styleClass="stat-value"/>
                         <Label text="Izin / Sakit" styleClass="stat-label"/>
                         <Label text="Konfirmasi surat tersedia" styleClass="stat-caption"/>
                     </VBox>
 
                     <VBox styleClass="stat-card, stat-card-orange" HBox.hgrow="ALWAYS" spacing="10">
-                        <HBox alignment="CENTER_LEFT">
-                            <StackPane styleClass="stat-icon, stat-icon-orange">
-                                <Label text="&#8986;" styleClass="stat-icon-text"/>
-                            </StackPane>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Label text="+5%" styleClass="stat-badge, stat-badge-up"/>
-                        </HBox>
+                        <StackPane styleClass="stat-icon, stat-icon-orange" alignment="CENTER_LEFT">
+                            <Label text="&#8986;" styleClass="stat-icon-text"/>
+                        </StackPane>
                         <Label fx:id="labelTerlambat" text="18" styleClass="stat-value"/>
                         <Label text="Terlambat" styleClass="stat-label"/>
                         <Label text="Batas toleransi 15 menit" styleClass="stat-caption"/>
                     </VBox>
 
                     <VBox styleClass="stat-card, stat-card-red" HBox.hgrow="ALWAYS" spacing="10">
-                        <HBox alignment="CENTER_LEFT">
-                            <StackPane styleClass="stat-icon, stat-icon-red">
-                                <Label text="&#10005;" styleClass="stat-icon-text"/>
-                            </StackPane>
-                            <Region HBox.hgrow="ALWAYS"/>
-                            <Label text="-8%" styleClass="stat-badge, stat-badge-down"/>
-                        </HBox>
+                        <StackPane styleClass="stat-icon, stat-icon-red" alignment="CENTER_LEFT">
+                            <Label text="&#10005;" styleClass="stat-icon-text"/>
+                        </StackPane>
                         <Label fx:id="labelAlfa" text="5" styleClass="stat-value"/>
                         <Label text="Alfa" styleClass="stat-label"/>
                         <Label text="Belum ada keterangan" styleClass="stat-caption"/>

@@ -63,8 +63,7 @@ public class PenggunaDAO {
     }
 
     /** Mengganti password (dipakai saat proses "Lupa Password" / reset). */
-    public boolean updatePassword(int penggunaId, String newPasswordHash) throws SQLException {
-        String sql = "UPDATE tb_pengguna SET password_hash = ? WHERE pengguna_id = ?";
+    public boolean updatePassword(int penggunaId, String newPasswordHash) throws SQLException {        String sql = "UPDATE tb_pengguna SET password_hash = ? WHERE pengguna_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, newPasswordHash);
@@ -73,9 +72,37 @@ public class PenggunaDAO {
         }
     }
 
+    /**
+     * Memperbarui data profil (nama, email, foto) dari halaman "Profil Saya".
+     * Password tidak ikut diubah di sini (lihat {@link #updatePassword}).
+     */
+    public boolean updateProfil(int penggunaId, String nama, String email, String foto) throws SQLException {
+        String sql = "UPDATE tb_pengguna SET nama = ?, email = ?, foto = ? WHERE pengguna_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, nama);
+            ps.setString(2, email);
+            ps.setString(3, foto);
+            ps.setInt(4, penggunaId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    /** Cek email sudah dipakai akun lain (untuk validasi ganti email di Profil Saya). */
+    public boolean existsByEmailExcept(String email, int kecualiPenggunaId) throws SQLException {
+        String sql = "SELECT 1 FROM tb_pengguna WHERE email = ? AND pengguna_id <> ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setInt(2, kecualiPenggunaId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
     /** Mengubah status akun, dipakai oleh Staf TU di halaman "Verifikasi Akun". */
-    public boolean updateStatusAkun(int penggunaId, StatusAkun statusAkun) throws SQLException {
-        String sql = "UPDATE tb_pengguna SET status_akun = ? WHERE pengguna_id = ?";
+    public boolean updateStatusAkun(int penggunaId, StatusAkun statusAkun) throws SQLException {        String sql = "UPDATE tb_pengguna SET status_akun = ? WHERE pengguna_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, statusAkun.name());
@@ -173,7 +200,7 @@ public class PenggunaDAO {
 
     private Pengguna mapRow(ResultSet rs) throws SQLException {
         Timestamp createdAtTs = rs.getTimestamp("created_at");
-        return new Pengguna(
+        Pengguna pengguna = new Pengguna(
                 rs.getInt("pengguna_id"),
                 rs.getString("email"),
                 rs.getString("password_hash"),
@@ -182,5 +209,12 @@ public class PenggunaDAO {
                 StatusAkun.valueOf(rs.getString("status_akun")),
                 createdAtTs != null ? createdAtTs.toLocalDateTime() : null
         );
+        try {
+            pengguna.setFoto(rs.getString("foto"));
+        } catch (SQLException e) {
+            // Kolom foto belum ada pada database lama yang belum dimigrasi.
+            pengguna.setFoto(null);
+        }
+        return pengguna;
     }
 }

@@ -20,6 +20,7 @@ CREATE TABLE tb_pengguna (
     nama            VARCHAR(100) NOT NULL,
     role            ENUM('TU', 'GURU') NOT NULL,
     status_akun     ENUM('MENUNGGU_VERIFIKASI', 'AKTIF', 'NONAKTIF') NOT NULL DEFAULT 'MENUNGGU_VERIFIKASI',
+    foto            VARCHAR(255),                  -- path file foto profil (diatur lewat halaman Profil Saya)
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 

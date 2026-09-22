@@ -10,9 +10,11 @@ import com.nurulislam.siap.model.Role;
 import com.nurulislam.siap.model.Statusmurid;
 import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
+import com.nurulislam.siap.util.ProfileMenu;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.layout.StackPane;
 import javafx.scene.control.*;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
@@ -60,7 +62,7 @@ public class DataKelasDetailController {
     @FXML private Button btnNavMataPelajaran;
     @FXML private Button btnNavCetakKartu;
     @FXML private Button btnNavLaporan;
-    @FXML private Hyperlink linkLogout;
+    @FXML private StackPane avatarBox;
 
     @FXML private Label labelNamaUser;
     @FXML private Label labelRoleUser;
@@ -115,7 +117,7 @@ public class DataKelasDetailController {
         btnTambahMurid.setOnAction(e -> bukaTambahMurid());
         btnUbahMurid.setOnAction(e -> bukaEditMurid());
         btnKembali.setOnAction(e -> bukaDataKelas());
-        linkLogout.setOnAction(e -> handleLogout());
+        ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
 
         // Sidebar kelas dibuat sebagai submenu yang dapat dibuka/tutup.
         setSubKelasTerbuka(true);
@@ -543,6 +545,16 @@ public class DataKelasDetailController {
         } catch (IOException e) {
             labelStatus.setText("Gagal membuka " + judul + ".");
             System.err.println("[DataKelasDetailController] IOException: " + e.getMessage());
+        }
+    }
+
+    /** Membuka halaman Profil Saya (diakses dari menu avatar kanan atas). */
+    private void bukaProfil() {
+        try {
+            SceneManager.switchTo("/com/nurulislam/siap/fxml/PengaturanAkun.fxml",
+                    Main.APP_TITLE + " - Profil Saya");
+        } catch (IOException e) {
+            System.err.println("[DataKelasDetailController] Gagal membuka Profil Saya: " + e.getMessage());
         }
     }
 

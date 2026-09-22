@@ -7,10 +7,12 @@ import com.nurulislam.siap.model.Role;
 import com.nurulislam.siap.model.StatusAkun;
 import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
+import com.nurulislam.siap.util.ProfileMenu;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.layout.StackPane;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
@@ -47,7 +49,7 @@ public class VerifikasiAkunController {
     @FXML private Button btnNavMataPelajaran;
     @FXML private Button btnNavCetakKartu;
     @FXML private Button btnNavLaporan;
-    @FXML private Hyperlink linkLogout;
+    @FXML private StackPane avatarBox;
 
     @FXML private Label labelNamaUser;
     @FXML private Label labelRoleUser;
@@ -100,7 +102,7 @@ public class VerifikasiAkunController {
         btnVerifikasi.setOnAction(e -> handleVerifikasi());
         btnTolak.setOnAction(e -> handleTolak());
         btnRefresh.setOnAction(e -> muatDaftarAkun());
-        linkLogout.setOnAction(e -> handleLogout());
+        ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
 
         muatDaftarAkun();
     }
@@ -341,6 +343,16 @@ public class VerifikasiAkunController {
         alert.setHeaderText(null);
         alert.setContentText("Fitur \"" + namaFitur + "\" akan dibuat pada tahap pengembangan berikutnya.");
         alert.showAndWait();
+    }
+
+    /** Membuka halaman Profil Saya (diakses dari menu avatar kanan atas). */
+    private void bukaProfil() {
+        try {
+            SceneManager.switchTo("/com/nurulislam/siap/fxml/PengaturanAkun.fxml",
+                    Main.APP_TITLE + " - Profil Saya");
+        } catch (IOException e) {
+            System.err.println("[VerifikasiAkunController] Gagal membuka Profil Saya: " + e.getMessage());
+        }
     }
 
     private void handleLogout() {

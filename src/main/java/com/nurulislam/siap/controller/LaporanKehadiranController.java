@@ -14,28 +14,29 @@ import com.nurulislam.siap.model.Role;
 import com.nurulislam.siap.model.StatusAbsensi;
 import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
+import com.nurulislam.siap.util.PdfExportUtil;
+import com.nurulislam.siap.util.ProfileMenu;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.layout.StackPane;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.print.PageLayout;
-import javafx.print.PageOrientation;
-import javafx.print.Paper;
-import javafx.print.Printer;
-import javafx.print.PrinterJob;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -63,17 +64,14 @@ import javafx.scene.layout.HBox;
  * ringkasan yang sama; filter "Mata Pelajaran" hanya muncul saat tab kedua
  * aktif.
  * <p>
- * Tombol "Cetak / Ekspor PDF" memakai {@link PrinterJob} bawaan JavaFX (bukan
- * library PDF tambahan) - sama seperti pola yang sudah dipakai
- * {@link ManajemenCetakKartuController}: pengguna tinggal memilih printer
- * "Microsoft Print to PDF" pada dialog cetak untuk mendapat file PDF.
+ * Tombol "Cetak / Ekspor PDF" menyimpan laporan langsung ke file PDF
+ * berbentuk tabel (lihat {@link PdfExportUtil}) lewat dialog "Simpan" -
+ * tidak lagi memakai dialog printer.
  */
 public class LaporanKehadiranController {
 
     private static final DateTimeFormatter FORMAT_TANGGAL = DateTimeFormatter.ofPattern("dd MMM yyyy");
     private static final DateTimeFormatter FORMAT_JAM = DateTimeFormatter.ofPattern("HH.mm");
-    /** Jumlah baris data per halaman cetak (selain baris header tabel). */
-    private static final int BARIS_PER_HALAMAN_CETAK = 20;
 
     // --- Sidebar ---
     @FXML private Button btnNavDashboard;
@@ -84,7 +82,7 @@ public class LaporanKehadiranController {
     @FXML private Button btnNavMataPelajaran;
     @FXML private Button btnNavCetakKartu;
     @FXML private Button btnNavLaporan;
-    @FXML private Hyperlink linkLogout;
+    @FXML private StackPane avatarBox;
 
     // --- Top bar ---
     @FXML private Label labelNamaUser;
@@ -167,7 +165,7 @@ public class LaporanKehadiranController {
         fieldPencarian.textProperty().addListener((obs, lama, baru) -> terapkanPencarian());
         btnTerapkanFilter.setOnAction(e -> muatData());
         btnEksporPdf.setOnAction(e -> handleEksporPdf());
-        linkLogout.setOnAction(e -> handleLogout());
+        ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
 
         muatDaftarKelasFilter();
         muatDaftarMapelFilter();
@@ -814,93 +812,102 @@ public class LaporanKehadiranController {
 
     private void handleEksporPdfHarian() {
         if (dataTampil.isEmpty()) {
-            errorLabel.setText("Tidak ada data untuk dicetak. Ubah filter terlebih dahulu.");
+            errorLabel.setText("Tidak ada data untuk diekspor. Ubah filter terlebih dahulu.");
             return;
         }
 
-        PrinterJob job = PrinterJob.createPrinterJob();
-        if (job == null) {
-            errorLabel.setText("Tidak ada printer yang terdeteksi di komputer ini.");
+        File tujuan = pilihFileTujuan("Laporan-Kehadiran-Harian");
+        if (tujuan == null) {
             return;
         }
 
-        boolean lanjut = job.showPrintDialog(btnEksporPdf.getScene().getWindow());
-        if (!lanjut) {
-            return;
+        String[] header = {"No", "Nama Siswa", "NIS", "Kelas", "Tanggal", "Status", "Waktu"};
+        float[] lebar = {0.5f, 2.6f, 1.1f, 0.9f, 1.2f, 1.0f, 0.9f};
+        List<String[]> baris = new ArrayList<>();
+        int nomor = 1;
+        for (Absensi a : dataTampil) {
+            baris.add(new String[]{
+                    String.valueOf(nomor++),
+                    a.getNamaMurid() != null ? a.getNamaMurid() : "-",
+                    a.getNis() != null ? a.getNis() : "-",
+                    a.getNamaKelas() != null ? a.getNamaKelas() : "-",
+                    a.getTanggal() != null ? a.getTanggal().format(FORMAT_TANGGAL) : "-",
+                    capitalisasi(a.getStatus().name()),
+                    a.getWaktuMasuk() != null ? a.getWaktuMasuk().format(FORMAT_JAM) : "-"
+            });
         }
-
-        Printer printer = job.getPrinter();
-        PageLayout layout = printer.createPageLayout(Paper.A4, PageOrientation.PORTRAIT, Printer.MarginType.DEFAULT);
-
-        List<Absensi> semuaData = dataTampil;
-        int totalHalaman = (int) Math.ceil(semuaData.size() / (double) BARIS_PER_HALAMAN_CETAK);
-        String ringkasanFilter = buatRingkasanFilter();
 
         try {
-            for (int halaman = 0; halaman < totalHalaman; halaman++) {
-                int awal = halaman * BARIS_PER_HALAMAN_CETAK;
-                int akhir = Math.min(awal + BARIS_PER_HALAMAN_CETAK, semuaData.size());
-                List<Absensi> potongan = semuaData.subList(awal, akhir);
-
-                VBox halamanCetak = buatHalamanCetak(potongan, ringkasanFilter, halaman + 1, totalHalaman);
-                // applyCss() + layout() WAJIB dipanggil manual: node ini dibangun baru di
-                // memori (tidak terpasang ke Scene manapun), jadi ukurannya belum terhitung
-                // sebelum frame render pertama. Tanpa baris ini, printPage bisa mencetak
-                // halaman kosong/terpotong.
-                halamanCetak.applyCss();
-                halamanCetak.layout();
-                job.printPage(layout, halamanCetak);
-            }
-            job.endJob();
+            PdfExportUtil.eksporTabel(tujuan,
+                    "Laporan Kehadiran Harian - MA Nurul Islam",
+                    buatRingkasanFilter(), header, baris, lebar, false);
             errorLabel.setText("");
+            infoEkspor(tujuan);
         } catch (Exception e) {
-            errorLabel.setText("Gagal mencetak laporan. Coba lagi.");
-            System.err.println("[LaporanKehadiranController] Gagal mencetak: " + e.getMessage());
+            errorLabel.setText("Gagal menyimpan file PDF. Coba lagi.");
+            System.err.println("[LaporanKehadiranController] Gagal ekspor PDF: " + e.getMessage());
         }
     }
 
     /** Versi "Absensi Mata Pelajaran" dari {@link #handleEksporPdfHarian()}, kolom ditambah Mapel & Guru. */
     private void handleEksporPdfMapel() {
         if (dataTampilMapel.isEmpty()) {
-            errorLabel.setText("Tidak ada data untuk dicetak. Ubah filter terlebih dahulu.");
+            errorLabel.setText("Tidak ada data untuk diekspor. Ubah filter terlebih dahulu.");
             return;
         }
 
-        PrinterJob job = PrinterJob.createPrinterJob();
-        if (job == null) {
-            errorLabel.setText("Tidak ada printer yang terdeteksi di komputer ini.");
+        File tujuan = pilihFileTujuan("Laporan-Kehadiran-Mapel");
+        if (tujuan == null) {
             return;
         }
 
-        boolean lanjut = job.showPrintDialog(btnEksporPdf.getScene().getWindow());
-        if (!lanjut) {
-            return;
+        String[] header = {"No", "Nama Siswa", "NIS", "Kelas", "Mata Pelajaran",
+                "Guru Pengajar", "Tanggal", "Status", "Waktu"};
+        float[] lebar = {0.5f, 2.0f, 1.0f, 0.8f, 1.8f, 1.8f, 1.2f, 1.0f, 0.9f};
+        List<String[]> baris = new ArrayList<>();
+        int nomor = 1;
+        for (AbsensiMapel a : dataTampilMapel) {
+            baris.add(new String[]{
+                    String.valueOf(nomor++),
+                    a.getNamaMurid() != null ? a.getNamaMurid() : "-",
+                    a.getNis() != null ? a.getNis() : "-",
+                    a.getNamaKelas() != null ? a.getNamaKelas() : "-",
+                    a.getNamaMapel() != null ? a.getNamaMapel() : "-",
+                    a.getNamaGuru() != null ? a.getNamaGuru() : "-",
+                    a.getTanggal() != null ? a.getTanggal().format(FORMAT_TANGGAL) : "-",
+                    capitalisasi(a.getStatus().name()),
+                    a.getWaktuScan() != null ? a.getWaktuScan().format(FORMAT_JAM) : "-"
+            });
         }
-
-        Printer printer = job.getPrinter();
-        PageLayout layout = printer.createPageLayout(Paper.A4, PageOrientation.LANDSCAPE, Printer.MarginType.DEFAULT);
-
-        List<AbsensiMapel> semuaData = dataTampilMapel;
-        int totalHalaman = (int) Math.ceil(semuaData.size() / (double) BARIS_PER_HALAMAN_CETAK);
-        String ringkasanFilter = buatRingkasanFilterMapel();
 
         try {
-            for (int halaman = 0; halaman < totalHalaman; halaman++) {
-                int awal = halaman * BARIS_PER_HALAMAN_CETAK;
-                int akhir = Math.min(awal + BARIS_PER_HALAMAN_CETAK, semuaData.size());
-                List<AbsensiMapel> potongan = semuaData.subList(awal, akhir);
-
-                VBox halamanCetak = buatHalamanCetakMapel(potongan, ringkasanFilter, halaman + 1, totalHalaman);
-                halamanCetak.applyCss();
-                halamanCetak.layout();
-                job.printPage(layout, halamanCetak);
-            }
-            job.endJob();
+            PdfExportUtil.eksporTabel(tujuan,
+                    "Laporan Kehadiran Mata Pelajaran - MA Nurul Islam",
+                    buatRingkasanFilterMapel(), header, baris, lebar, true);
             errorLabel.setText("");
+            infoEkspor(tujuan);
         } catch (Exception e) {
-            errorLabel.setText("Gagal mencetak laporan. Coba lagi.");
-            System.err.println("[LaporanKehadiranController] Gagal mencetak (mapel): " + e.getMessage());
+            errorLabel.setText("Gagal menyimpan file PDF. Coba lagi.");
+            System.err.println("[LaporanKehadiranController] Gagal ekspor PDF (mapel): " + e.getMessage());
         }
+    }
+
+    /** Dialog "Simpan" untuk memilih lokasi file PDF hasil ekspor. */
+    private File pilihFileTujuan(String awalan) {
+        FileChooser pemilih = new FileChooser();
+        pemilih.setTitle("Simpan Laporan PDF");
+        pemilih.getExtensionFilters().add(new FileChooser.ExtensionFilter("File PDF", "*.pdf"));
+        pemilih.setInitialFileName(awalan + "-"
+                + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + ".pdf");
+        return pemilih.showSaveDialog(btnEksporPdf.getScene().getWindow());
+    }
+
+    private void infoEkspor(File tujuan) {
+        Alert sukses = new Alert(Alert.AlertType.INFORMATION);
+        sukses.setTitle("Ekspor PDF");
+        sukses.setHeaderText(null);
+        sukses.setContentText("File PDF berhasil disimpan:\n" + tujuan.getAbsolutePath());
+        sukses.showAndWait();
     }
 
     private String buatRingkasanFilter() {
@@ -922,128 +929,6 @@ public class LaporanKehadiranController {
         return sb.toString();
     }
 
-    /**
-     * Membangun satu halaman cetak sebagai node VBox mandiri (bukan bagian dari
-     * Scene aplikasi), sehingga memakai gaya inline (bukan style.css) agar tetap
-     * tampil benar walau tidak terpasang ke stylesheet manapun.
-     */
-    private VBox buatHalamanCetak(List<Absensi> baris, String ringkasanFilter, int halamanKe, int totalHalaman) {
-        VBox halaman = new VBox(10);
-        halaman.setPadding(new Insets(24));
-        halaman.setPrefWidth(555); // kira-kira lebar area cetak A4 potrait dikurangi margin, dalam poin
-
-        Label judul = new Label("Laporan Kehadiran Harian - MA Nurul Islam");
-        judul.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #191c1e;");
-
-        Label subjudul = new Label(ringkasanFilter);
-        subjudul.setStyle("-fx-font-size: 10px; -fx-text-fill: #4b5563;");
-        subjudul.setWrapText(true);
-
-        GridPane tabel = new GridPane();
-        tabel.setHgap(6);
-        tabel.setVgap(4);
-        tabel.setPadding(new Insets(8, 0, 0, 0));
-
-        String[] header = {"Nama Siswa", "NIS", "Kelas", "Tanggal", "Status", "Waktu"};
-        double[] lebarKolom = {150, 70, 60, 80, 65, 60};
-        for (int i = 0; i < header.length; i++) {
-            Label labelHeader = new Label(header[i]);
-            labelHeader.setStyle("-fx-font-size: 9px; -fx-font-weight: bold; -fx-text-fill: #191c1e;");
-            labelHeader.setPrefWidth(lebarKolom[i]);
-            tabel.add(labelHeader, i, 0);
-        }
-
-        int barisKe = 1;
-        for (Absensi a : baris) {
-            String[] nilai = {
-                    a.getNamaMurid() != null ? a.getNamaMurid() : "-",
-                    a.getNis() != null ? a.getNis() : "-",
-                    a.getNamaKelas() != null ? a.getNamaKelas() : "-",
-                    a.getTanggal() != null ? a.getTanggal().format(FORMAT_TANGGAL) : "-",
-                    capitalisasi(a.getStatus().name()),
-                    a.getWaktuMasuk() != null ? a.getWaktuMasuk().format(FORMAT_JAM) : "-"
-            };
-            for (int i = 0; i < nilai.length; i++) {
-                Label sel = new Label(nilai[i]);
-                sel.setStyle("-fx-font-size: 9px; -fx-text-fill: #191c1e;");
-                sel.setPrefWidth(lebarKolom[i]);
-                sel.setWrapText(true);
-                tabel.add(sel, i, barisKe);
-            }
-            barisKe++;
-        }
-
-        Label footer = new Label("Halaman " + halamanKe + " dari " + totalHalaman
-                + "  -  Dicetak melalui SIAP MA Nurul Islam");
-        footer.setStyle("-fx-font-size: 8px; -fx-text-fill: #9ca3af;");
-        VBox.setMargin(footer, new Insets(12, 0, 0, 0));
-
-        VBox.setVgrow(tabel, Priority.ALWAYS);
-        halaman.getChildren().addAll(judul, subjudul, tabel, footer);
-        halaman.setAlignment(Pos.TOP_LEFT);
-        return halaman;
-    }
-
-    /** Versi "Absensi Mata Pelajaran" dari {@link #buatHalamanCetak}, kolom ditambah Mapel & Guru, landscape. */
-    private VBox buatHalamanCetakMapel(List<AbsensiMapel> baris, String ringkasanFilter, int halamanKe, int totalHalaman) {
-        VBox halaman = new VBox(10);
-        halaman.setPadding(new Insets(24));
-        halaman.setPrefWidth(795); // kira-kira lebar area cetak A4 landscape dikurangi margin, dalam poin
-
-        Label judul = new Label("Laporan Kehadiran Mata Pelajaran - MA Nurul Islam");
-        judul.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #191c1e;");
-
-        Label subjudul = new Label(ringkasanFilter);
-        subjudul.setStyle("-fx-font-size: 10px; -fx-text-fill: #4b5563;");
-        subjudul.setWrapText(true);
-
-        GridPane tabel = new GridPane();
-        tabel.setHgap(6);
-        tabel.setVgap(4);
-        tabel.setPadding(new Insets(8, 0, 0, 0));
-
-        String[] header = {"Nama Siswa", "NIS", "Kelas", "Mata Pelajaran", "Guru Pengajar", "Tanggal", "Status", "Waktu"};
-        double[] lebarKolom = {140, 70, 60, 130, 130, 80, 65, 60};
-        for (int i = 0; i < header.length; i++) {
-            Label labelHeader = new Label(header[i]);
-            labelHeader.setStyle("-fx-font-size: 9px; -fx-font-weight: bold; -fx-text-fill: #191c1e;");
-            labelHeader.setPrefWidth(lebarKolom[i]);
-            tabel.add(labelHeader, i, 0);
-        }
-
-        int barisKe = 1;
-        for (AbsensiMapel a : baris) {
-            String[] nilai = {
-                    a.getNamaMurid() != null ? a.getNamaMurid() : "-",
-                    a.getNis() != null ? a.getNis() : "-",
-                    a.getNamaKelas() != null ? a.getNamaKelas() : "-",
-                    a.getNamaMapel() != null ? a.getNamaMapel() : "-",
-                    a.getNamaGuru() != null ? a.getNamaGuru() : "-",
-                    a.getTanggal() != null ? a.getTanggal().format(FORMAT_TANGGAL) : "-",
-                    capitalisasi(a.getStatus().name()),
-                    a.getWaktuScan() != null ? a.getWaktuScan().format(FORMAT_JAM) : "-"
-            };
-            for (int i = 0; i < nilai.length; i++) {
-                Label sel = new Label(nilai[i]);
-                sel.setStyle("-fx-font-size: 9px; -fx-text-fill: #191c1e;");
-                sel.setPrefWidth(lebarKolom[i]);
-                sel.setWrapText(true);
-                tabel.add(sel, i, barisKe);
-            }
-            barisKe++;
-        }
-
-        Label footer = new Label("Halaman " + halamanKe + " dari " + totalHalaman
-                + "  -  Dicetak melalui SIAP MA Nurul Islam");
-        footer.setStyle("-fx-font-size: 8px; -fx-text-fill: #9ca3af;");
-        VBox.setMargin(footer, new Insets(12, 0, 0, 0));
-
-        VBox.setVgrow(tabel, Priority.ALWAYS);
-        halaman.getChildren().addAll(judul, subjudul, tabel, footer);
-        halaman.setAlignment(Pos.TOP_LEFT);
-        return halaman;
-    }
-
     // ================= Util =================
 
     private String capitalisasi(String teksEnum) {
@@ -1051,6 +936,16 @@ public class LaporanKehadiranController {
             return "";
         }
         return teksEnum.charAt(0) + teksEnum.substring(1).toLowerCase();
+    }
+
+    /** Membuka halaman Profil Saya (diakses dari menu avatar kanan atas). */
+    private void bukaProfil() {
+        try {
+            SceneManager.switchTo("/com/nurulislam/siap/fxml/PengaturanAkun.fxml",
+                    Main.APP_TITLE + " - Profil Saya");
+        } catch (IOException e) {
+            System.err.println("[LaporanKehadiranController] Gagal membuka Profil Saya: " + e.getMessage());
+        }
     }
 
     private void handleLogout() {

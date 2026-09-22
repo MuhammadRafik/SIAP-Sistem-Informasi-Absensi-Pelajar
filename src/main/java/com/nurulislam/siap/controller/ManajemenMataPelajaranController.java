@@ -5,9 +5,11 @@ import com.nurulislam.siap.dao.*;
 import com.nurulislam.siap.model.*;
 import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
+import com.nurulislam.siap.util.ProfileMenu;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.layout.StackPane;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -54,7 +56,7 @@ public class ManajemenMataPelajaranController {
     @FXML private Button btnNavMataPelajaran;
     @FXML private Button btnNavCetakKartu;
     @FXML private Button btnNavLaporan;
-    @FXML private Hyperlink linkLogout;
+    @FXML private StackPane avatarBox;
 
     // --- Top bar ---
     @FXML private Label labelNamaUser;
@@ -168,7 +170,7 @@ public class ManajemenMataPelajaranController {
         btnSimpanJadwal.setOnAction(e -> handleSimpanJadwal());
         btnBatalJadwal.setOnAction(e -> resetFormJadwal());
 
-        linkLogout.setOnAction(e -> handleLogout());
+        ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
 
         muatDaftarPendukungForm();
         muatSemuaData();
@@ -794,6 +796,16 @@ public class ManajemenMataPelajaranController {
         alert.setHeaderText(null);
         alert.setContentText("Fitur \"" + namaFitur + "\" akan dibuat pada tahap pengembangan berikutnya.");
         alert.showAndWait();
+    }
+
+    /** Membuka halaman Profil Saya (diakses dari menu avatar kanan atas). */
+    private void bukaProfil() {
+        try {
+            SceneManager.switchTo("/com/nurulislam/siap/fxml/PengaturanAkun.fxml",
+                    Main.APP_TITLE + " - Profil Saya");
+        } catch (IOException e) {
+            System.err.println("[ManajemenMataPelajaranController] Gagal membuka Profil Saya: " + e.getMessage());
+        }
     }
 
     private void handleLogout() {

@@ -9,63 +9,287 @@ import com.nurulislam.siap.util.SessionManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
+import java.util.Optional;
 
 /**
- * Fix 25:
- * Pengaturan akun Guru untuk melihat data akun dan mengganti password.
+ * Halaman "Profil Saya" untuk Staf TU dan Guru.
+ * - Menampilkan & mengubah foto profil, nama, dan email.
+ * - Mengubah password.
+ * - Keluar (logout) dari aplikasi.
  */
 public class PengaturanAkunController {
+
+    @FXML private ImageView imgFoto;
+    @FXML private Label labelInisialFoto;
+    @FXML private Label labelNamaBesar;
+    @FXML private Label labelEmailBesar;
+    @FXML private Button btnPilihFoto;
+    @FXML private Button btnHapusFoto;
 
     @FXML private TextField fieldNama;
     @FXML private TextField fieldEmail;
     @FXML private Label labelRole;
+    @FXML private Label labelStatusAkun;
+    @FXML private Label labelProfilError;
+    @FXML private Button btnSimpanProfil;
+
     @FXML private PasswordField fieldPasswordLama;
     @FXML private PasswordField fieldPasswordBaru;
     @FXML private PasswordField fieldKonfirmasi;
     @FXML private Label labelError;
     @FXML private Button btnSimpanPassword;
+
     @FXML private Button btnKembali;
+    @FXML private Button btnLogout;
 
     private static final int MIN_PASSWORD = 6;
+    private static final long MAKS_UKURAN_FOTO = 2L * 1024 * 1024; // 2 MB
 
     private final PenggunaDAO penggunaDAO = new PenggunaDAO();
+
+    /** File foto yang baru dipilih (belum tersimpan sampai "Simpan Perubahan" ditekan). */
+    private File fotoBaru;
+    /** true jika pengguna menekan "Hapus Foto". */
+    private boolean hapusFotoDiminta;
 
     @FXML
     public void initialize() {
         labelError.setText("");
+        labelProfilError.setText("");
+
+        // Potong pratinjau foto menjadi lingkaran mengikuti bingkai avatar.
+        if (imgFoto != null) {
+            imgFoto.setClip(new Circle(48, 48, 48));
+        }
+
         muatDataAkun();
 
+        btnSimpanProfil.setOnAction(e -> simpanProfil());
         btnSimpanPassword.setOnAction(e -> ubahPassword());
+        btnPilihFoto.setOnAction(e -> pilihFoto());
+        btnHapusFoto.setOnAction(e -> hapusFoto());
         btnKembali.setOnAction(e -> kembali());
+        btnLogout.setOnAction(e -> handleLogout());
     }
+
+    // ================= Profil =================
 
     private void muatDataAkun() {
         Pengguna pengguna = SessionManager.getPenggunaAktif();
 
         if (pengguna == null || pengguna.getPenggunaId() == null) {
-            labelError.setText("Sesi akun tidak valid. Silakan login kembali.");
+            labelProfilError.setText("Sesi akun tidak valid. Silakan login kembali.");
+            btnSimpanProfil.setDisable(true);
             btnSimpanPassword.setDisable(true);
             return;
         }
 
         fieldNama.setText(pengguna.getNama() == null ? "" : pengguna.getNama());
         fieldEmail.setText(pengguna.getEmail() == null ? "" : pengguna.getEmail());
-        labelRole.setText(
-                pengguna.getRole() == null ? "" : pengguna.getRole().getLabel()
-        );
+        labelRole.setText(pengguna.getRole() == null ? "-" : pengguna.getRole().getLabel());
+        labelStatusAkun.setText(pengguna.getStatusAkun() == null ? "-" : humanis(pengguna.getStatusAkun().name()));
 
-        // Nama dan email hanya ditampilkan pada Fix 25.
-        // Pengubahan identitas tetap dikelola melalui TU agar tidak
-        // mengganggu keterhubungan akun dengan data jadwal.
-        fieldNama.setEditable(false);
-        fieldEmail.setEditable(false);
+        labelNamaBesar.setText(pengguna.getNama() == null ? "-" : pengguna.getNama());
+        labelEmailBesar.setText(pengguna.getEmail() == null ? "-" : pengguna.getEmail());
+
+        fotoBaru = null;
+        hapusFotoDiminta = false;
+        tampilkanFoto(pengguna.getFoto());
     }
+
+    private void simpanProfil() {
+        labelProfilError.setText("");
+
+        Pengguna pengguna = SessionManager.getPenggunaAktif();
+        if (pengguna == null || pengguna.getPenggunaId() == null) {
+            labelProfilError.setText("Sesi akun tidak valid. Silakan login kembali.");
+            return;
+        }
+
+        String nama = safe(fieldNama.getText());
+        String email = safe(fieldEmail.getText());
+
+        if (nama.isEmpty()) {
+            labelProfilError.setText("Nama lengkap wajib diisi.");
+            return;
+        }
+        if (email.isEmpty()) {
+            labelProfilError.setText("Email wajib diisi.");
+            return;
+        }
+        if (!email.matches("[^@\\s]+@[^@\\s]+\\.[^@\\s]+")) {
+            labelProfilError.setText("Format email tidak valid.");
+            return;
+        }
+
+        try {
+            if (!email.equalsIgnoreCase(pengguna.getEmail())
+                    && penggunaDAO.existsByEmailExcept(email, pengguna.getPenggunaId())) {
+                labelProfilError.setText("Email ini sudah dipakai akun lain.");
+                return;
+            }
+
+            String pathFoto = pengguna.getFoto();
+            if (hapusFotoDiminta) {
+                hapusFileFotoLama(pathFoto);
+                pathFoto = null;
+            } else if (fotoBaru != null) {
+                hapusFileFotoLama(pathFoto);
+                pathFoto = salinFotoKePenyimpanan(pengguna.getPenggunaId(), fotoBaru);
+            }
+
+            if (!penggunaDAO.updateProfil(pengguna.getPenggunaId(), nama, email, pathFoto)) {
+                labelProfilError.setText("Perubahan gagal disimpan.");
+                return;
+            }
+
+            pengguna.setNama(nama);
+            pengguna.setEmail(email);
+            pengguna.setFoto(pathFoto);
+
+            fotoBaru = null;
+            hapusFotoDiminta = false;
+            labelNamaBesar.setText(nama);
+            labelEmailBesar.setText(email);
+            tampilkanFoto(pathFoto);
+            labelProfilError.setText("");
+            info("Profil Saya", "Perubahan profil berhasil disimpan.");
+        } catch (SQLException e) {
+            labelProfilError.setText("Database tidak dapat dihubungi. Coba lagi.");
+            System.err.println("[PengaturanAkunController] SQLException (profil): " + e.getMessage());
+        } catch (IOException e) {
+            labelProfilError.setText("Gagal menyimpan file foto. Coba lagi.");
+            System.err.println("[PengaturanAkunController] IOException (foto): " + e.getMessage());
+        }
+    }
+
+    // ================= Foto =================
+
+    private void pilihFoto() {
+        FileChooser pemilih = new FileChooser();
+        pemilih.setTitle("Pilih Foto Profil");
+        pemilih.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Gambar", "*.png", "*.jpg", "*.jpeg")
+        );
+        File berkas = pemilih.showOpenDialog(btnPilihFoto.getScene().getWindow());
+        if (berkas == null) {
+            return;
+        }
+
+        String namaBerkas = berkas.getName().toLowerCase();
+        if (!(namaBerkas.endsWith(".png") || namaBerkas.endsWith(".jpg") || namaBerkas.endsWith(".jpeg"))) {
+            labelProfilError.setText("Format foto harus PNG atau JPG.");
+            return;
+        }
+        if (berkas.length() > MAKS_UKURAN_FOTO) {
+            labelProfilError.setText("Ukuran foto maksimal 2 MB.");
+            return;
+        }
+
+        fotoBaru = berkas;
+        hapusFotoDiminta = false;
+        tampilkanFotoPratinjau(berkas);
+        labelProfilError.setText("Foto dipilih. Tekan \"Simpan Perubahan\" untuk menyimpan.");
+    }
+
+    private void hapusFoto() {
+        fotoBaru = null;
+        hapusFotoDiminta = true;
+        tampilkanFoto(null);
+        labelProfilError.setText("Foto akan dihapus saat \"Simpan Perubahan\" ditekan.");
+    }
+
+    private void tampilkanFoto(String pathFoto) {
+        if (pathFoto == null || pathFoto.isBlank()) {
+            imgFoto.setImage(null);
+            labelInisialFoto.setVisible(true);
+            perbaruiInisial();
+            return;
+        }
+        try {
+            File berkas = new File(pathFoto);
+            if (!berkas.exists()) {
+                imgFoto.setImage(null);
+                labelInisialFoto.setVisible(true);
+                perbaruiInisial();
+                return;
+            }
+            imgFoto.setImage(new Image(berkas.toURI().toString()));
+            labelInisialFoto.setVisible(false);
+        } catch (RuntimeException e) {
+            imgFoto.setImage(null);
+            labelInisialFoto.setVisible(true);
+            perbaruiInisial();
+            System.err.println("[PengaturanAkunController] Gagal memuat foto: " + e.getMessage());
+        }
+    }
+
+    private void tampilkanFotoPratinjau(File berkas) {
+        try {
+            imgFoto.setImage(new Image(berkas.toURI().toString()));
+            labelInisialFoto.setVisible(false);
+        } catch (RuntimeException e) {
+            labelProfilError.setText("File gambar tidak dapat dibaca.");
+            System.err.println("[PengaturanAkunController] Gagal membaca foto: " + e.getMessage());
+        }
+    }
+
+    private void perbaruiInisial() {
+        String nama = safe(fieldNama.getText());
+        if (nama.isEmpty()) {
+            Pengguna pengguna = SessionManager.getPenggunaAktif();
+            nama = pengguna != null && pengguna.getNama() != null ? pengguna.getNama() : "";
+        }
+        String[] bagian = nama.trim().split("\\s+");
+        StringBuilder inisial = new StringBuilder();
+        for (int i = 0; i < Math.min(2, bagian.length); i++) {
+            if (!bagian[i].isEmpty()) {
+                inisial.append(Character.toUpperCase(bagian[i].charAt(0)));
+            }
+        }
+        labelInisialFoto.setText(inisial.length() > 0 ? inisial.toString() : "?");
+    }
+
+    private String salinFotoKePenyimpanan(int penggunaId, File sumber) throws IOException {
+        String namaSumber = sumber.getName().toLowerCase();
+        String ekstensi = namaSumber.endsWith(".png") ? ".png" : ".jpg";
+        Path folder = Path.of(System.getProperty("user.home"), ".siap", "foto-profil");
+        Files.createDirectories(folder);
+        // Hapus varian ekstensi lama agar tidak menumpuk.
+        Files.deleteIfExists(folder.resolve("pengguna-" + penggunaId + ".png"));
+        Files.deleteIfExists(folder.resolve("pengguna-" + penggunaId + ".jpg"));
+        Path tujuan = folder.resolve("pengguna-" + penggunaId + ekstensi);
+        Files.copy(sumber.toPath(), tujuan, StandardCopyOption.REPLACE_EXISTING);
+        return tujuan.toString();
+    }
+
+    private void hapusFileFotoLama(String pathFoto) {
+        if (pathFoto == null || pathFoto.isBlank()) {
+            return;
+        }
+        try {
+            Files.deleteIfExists(Path.of(pathFoto));
+        } catch (IOException | RuntimeException e) {
+            System.err.println("[PengaturanAkunController] Gagal menghapus foto lama: " + e.getMessage());
+        }
+    }
+
+    // ================= Password =================
 
     private void ubahPassword() {
         labelError.setText("");
@@ -129,14 +353,7 @@ public class PengaturanAkunController {
             fieldPasswordBaru.clear();
             fieldKonfirmasi.clear();
 
-            Alert sukses = new Alert(Alert.AlertType.INFORMATION);
-            sukses.setTitle("Pengaturan Akun");
-            sukses.setHeaderText("Password berhasil diubah");
-            sukses.setContentText(
-                    "Password baru sudah tersimpan. Gunakan password baru saat login berikutnya."
-            );
-            sukses.showAndWait();
-
+            info("Profil Saya", "Password baru sudah tersimpan. Gunakan password baru saat login berikutnya.");
         } catch (SQLException e) {
             labelError.setText("Database tidak dapat dihubungi. Coba lagi.");
             System.err.println(
@@ -150,6 +367,8 @@ public class PengaturanAkunController {
         }
     }
 
+    // ================= Navigasi =================
+
     private void kembali() {
         Pengguna pengguna = SessionManager.getPenggunaAktif();
 
@@ -158,8 +377,8 @@ public class PengaturanAkunController {
                 : "/com/nurulislam/siap/fxml/Dashboard.fxml";
 
         String judul = pengguna != null && pengguna.isGuru()
-                ? "Dashboard Guru"
-                : "Dashboard TU";
+                ? "Beranda"
+                : "Dashboard";
 
         try {
             SceneManager.switchTo(tujuan, Main.APP_TITLE + " - " + judul);
@@ -169,6 +388,50 @@ public class PengaturanAkunController {
                     "[PengaturanAkunController] IOException: " + e.getMessage()
             );
         }
+    }
+
+    private void handleLogout() {
+        Alert konfirmasi = new Alert(Alert.AlertType.CONFIRMATION);
+        konfirmasi.setTitle("Logout");
+        konfirmasi.setHeaderText(null);
+        konfirmasi.setContentText("Keluar dari aplikasi dan kembali ke halaman masuk?");
+        Optional<ButtonType> jawaban = konfirmasi.showAndWait();
+        if (jawaban.isEmpty() || jawaban.get() != ButtonType.OK) {
+            return;
+        }
+        SessionManager.logout();
+        try {
+            SceneManager.switchTo("/com/nurulislam/siap/fxml/Login.fxml", Main.APP_TITLE + " - Masuk");
+        } catch (IOException e) {
+            labelError.setText("Gagal membuka halaman Login.");
+            System.err.println("[PengaturanAkunController] IOException: " + e.getMessage());
+        }
+    }
+
+    private void info(String judul, String pesan) {
+        Alert sukses = new Alert(Alert.AlertType.INFORMATION);
+        sukses.setTitle(judul);
+        sukses.setHeaderText(null);
+        sukses.setContentText(pesan);
+        sukses.showAndWait();
+    }
+
+    private String humanis(String teksEnum) {
+        if (teksEnum == null || teksEnum.isEmpty()) {
+            return "-";
+        }
+        String[] kata = teksEnum.split("_");
+        StringBuilder hasil = new StringBuilder();
+        for (String k : kata) {
+            if (k.isEmpty()) {
+                continue;
+            }
+            if (hasil.length() > 0) {
+                hasil.append(' ');
+            }
+            hasil.append(k.charAt(0)).append(k.substring(1).toLowerCase());
+        }
+        return hasil.toString();
     }
 
     private String safe(String value) {

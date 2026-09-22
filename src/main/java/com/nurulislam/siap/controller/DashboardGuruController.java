@@ -12,12 +12,14 @@ import com.nurulislam.siap.model.StatusAbsensi;
 import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.DatabaseConnection;
 import com.nurulislam.siap.util.SessionManager;
+import com.nurulislam.siap.util.ProfileMenu;
 import javafx.application.Platform;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 import javafx.fxml.FXML;
+import javafx.scene.layout.StackPane;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -41,7 +43,7 @@ public class DashboardGuruController {
     private volatile boolean databaseSebelumnyaTersedia = false;
     private volatile boolean sedangMemuatUlangData = false;
     @FXML private Button btnNavBeranda, btnNavJadwal, btnNavAbsensiMapel, btnNavLaporan;
-    @FXML private Hyperlink linkLogout;
+    @FXML private StackPane avatarBox;
     @FXML private Label labelTanggal, labelNamaUser, labelRoleUser, labelInisialUser, labelHalo;
     @FXML private Label labelJumlahKelas, labelJumlahSiswa, labelSesiBerjalan, labelSesiSelesai;
     @FXML private Label labelStatusDatabase;
@@ -93,8 +95,8 @@ public class DashboardGuruController {
         btnNavLaporan.setOnAction(e -> bukaLaporan());
         btnMulaiScan.setOnAction(e -> bukaAbsensiMapel());
         btnLihatLaporan.setOnAction(e -> bukaLaporan());
-        btnPengaturanAkun.setOnAction(e -> buka("/com/nurulislam/siap/fxml/PengaturanAkun.fxml", "Pengaturan Akun"));
-        linkLogout.setOnAction(e -> handleLogout());
+        btnPengaturanAkun.setOnAction(e -> buka("/com/nurulislam/siap/fxml/PengaturanAkun.fxml", "Profil Saya"));
+        ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
     
         mulaiPemantauanDatabase();}
 
@@ -320,6 +322,16 @@ public class DashboardGuruController {
         if (timelineStatusDatabase != null) {
             timelineStatusDatabase.stop();
             timelineStatusDatabase = null;
+        }
+    }
+
+    /** Membuka halaman Profil Saya (diakses dari menu avatar kanan atas). */
+    private void bukaProfil() {
+        try {
+            SceneManager.switchTo("/com/nurulislam/siap/fxml/PengaturanAkun.fxml",
+                    Main.APP_TITLE + " - Profil Saya");
+        } catch (IOException e) {
+            System.err.println("[DashboardGuruController] Gagal membuka Profil Saya: " + e.getMessage());
         }
     }
 

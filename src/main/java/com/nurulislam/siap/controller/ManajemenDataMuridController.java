@@ -10,10 +10,12 @@ import com.nurulislam.siap.model.Statusmurid;
 import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.DatabaseConnection;
 import com.nurulislam.siap.util.SessionManager;
+import com.nurulislam.siap.util.ProfileMenu;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.scene.layout.StackPane;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -54,7 +56,7 @@ public class ManajemenDataMuridController {
     @FXML private Button btnNavMataPelajaran;
     @FXML private Button btnNavCetakKartu;
     @FXML private Button btnNavLaporan;
-    @FXML private Hyperlink linkLogout;
+    @FXML private StackPane avatarBox;
 
     // --- Top bar ---
     @FXML private Label labelNamaUser;
@@ -167,7 +169,7 @@ public class ManajemenDataMuridController {
         btnSimpan.setOnAction(e -> handleSimpan());
         btnBatal.setOnAction(e -> resetForm());
         btnPilihFoto.setOnAction(e -> handlePilihFoto());
-        linkLogout.setOnAction(e -> handleLogout());
+        ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
 
         muatDaftarKelasUntukCombo();
         muatDaftarMurid();
@@ -713,6 +715,16 @@ public class ManajemenDataMuridController {
         alert.setHeaderText(null);
         alert.setContentText("Fitur \"" + namaFitur + "\" akan dibuat pada tahap pengembangan berikutnya.");
         alert.showAndWait();
+    }
+
+    /** Membuka halaman Profil Saya (diakses dari menu avatar kanan atas). */
+    private void bukaProfil() {
+        try {
+            SceneManager.switchTo("/com/nurulislam/siap/fxml/PengaturanAkun.fxml",
+                    Main.APP_TITLE + " - Profil Saya");
+        } catch (IOException e) {
+            System.err.println("[ManajemenDataMuridController] Gagal membuka Profil Saya: " + e.getMessage());
+        }
     }
 
     private void handleLogout() {

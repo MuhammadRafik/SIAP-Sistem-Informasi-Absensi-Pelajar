@@ -35,7 +35,7 @@
                 </StackPane>
                 <VBox spacing="1">
                     <Label text="SIAP" styleClass="sidebar-brand"/>
-                    <Label text="School Admin System" styleClass="sidebar-brand-sub"/>
+                    <Label text="Sistem Informasi Absensi Pelajar" styleClass="sidebar-brand-sub" wrapText="true"/>
                 </VBox>
             </HBox>
 
@@ -72,8 +72,6 @@
             <VBox styleClass="system-status-box" spacing="4">
                 <Label text="System Status: Active" styleClass="system-status-text"/>
             </VBox>
-
-            <Hyperlink fx:id="linkLogout" text="Logout" styleClass="link-logout"/>
         </VBox>
     </left>
 
@@ -99,7 +97,7 @@
                             <Label fx:id="labelNamaUser" text="Admin User" styleClass="user-name"/>
                             <Label fx:id="labelRoleUser" text="School Administrator" styleClass="user-role"/>
                         </VBox>
-                        <StackPane styleClass="avatar-circle">
+                        <StackPane fx:id="avatarBox" styleClass="avatar-circle">
                             <Label fx:id="labelInisialUser" text="A" styleClass="avatar-text"/>
                         </StackPane>
                     </HBox>

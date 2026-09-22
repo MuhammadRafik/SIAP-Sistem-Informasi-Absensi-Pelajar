@@ -33,7 +33,7 @@
                 </StackPane>
                 <VBox spacing="1">
                     <Label text="SIAP" styleClass="sidebar-brand"/>
-                    <Label text="Teacher Portal" styleClass="sidebar-brand-sub"/>
+                    <Label text="Sistem Informasi Absensi Pelajar" styleClass="sidebar-brand-sub" wrapText="true"/>
                 </VBox>
             </HBox>
 
@@ -45,10 +45,8 @@
             <Region VBox.vgrow="ALWAYS"/>
 
             <VBox styleClass="system-status-box" spacing="4">
-                <Label text="System Status: Active" styleClass="system-status-text"/>
+                <Label fx:id="labelStatusDatabase" text="Memeriksa database..." styleClass="system-status-text, db-checking"/>
             </VBox>
-
-            <Hyperlink fx:id="linkLogout" text="Logout" styleClass="link-logout"/>
         </VBox>
     </left>
 
@@ -71,7 +69,7 @@
                         <Label fx:id="labelNamaUser" text="Guru" styleClass="user-name"/>
                         <Label fx:id="labelRoleUser" text="Guru Mata Pelajaran" styleClass="user-role"/>
                     </VBox>
-                    <StackPane styleClass="avatar-circle">
+                    <StackPane fx:id="avatarBox" styleClass="avatar-circle">
                         <Label fx:id="labelInisialUser" text="G" styleClass="avatar-text"/>
                     </StackPane>
                 </HBox>
@@ -146,7 +144,7 @@
                     <HBox spacing="14">
                         <Button fx:id="btnMulaiScan" text="Mulai Absensi" styleClass="quick-action-btn" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
                         <Button fx:id="btnLihatLaporan" text="Lihat Laporan" styleClass="quick-action-btn" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                        <Button fx:id="btnPengaturanAkun" text="Pengaturan Akun" styleClass="quick-action-btn" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                        <Button fx:id="btnPengaturanAkun" text="Profil Saya" styleClass="quick-action-btn" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
                     </HBox>
                 </VBox>
             </VBox>

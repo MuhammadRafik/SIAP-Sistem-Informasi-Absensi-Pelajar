@@ -30,6 +30,7 @@ import com.nurulislam.siap.model.Role;
 import com.nurulislam.siap.model.StatusAbsensi;
 import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
+import com.nurulislam.siap.util.ProfileMenu;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -37,7 +38,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -90,7 +90,7 @@ public class AbsensiMapelController {
     @FXML private Button btnNavAbsensiMapel;
     @FXML private Button btnNavLaporan;
     @FXML private Label labelStatusKamera;
-    @FXML private Hyperlink linkLogout;
+    @FXML private StackPane avatarBox;
 
     // --- Top bar ---
     @FXML private Label labelTanggal;
@@ -205,8 +205,7 @@ public class AbsensiMapelController {
         labelNamaUser.setText(nama);
         labelRoleUser.setText(peran);
         labelInisialUser.setText(inisial(nama));
-        labelSidebarSub.setText(pengguna != null && pengguna.getRole() == Role.GURU
-                ? "Teacher Portal" : "Absensi MA Nurul Islam");
+        labelSidebarSub.setText("Sistem Informasi Absensi Pelajar");
     }
 
     private String inisial(String nama) {
@@ -238,7 +237,7 @@ public class AbsensiMapelController {
         btnNavJadwal.setOnAction(e -> bukaJadwalMengajar());
         btnNavAbsensiMapel.setOnAction(e -> { /* sudah di halaman Absensi Mata Pelajaran */ });
         btnNavLaporan.setOnAction(e -> bukaLaporan());
-        linkLogout.setOnAction(e -> handleLogout());
+        ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
     }
 
     private String halamanBerandaSesuaiRole() {
@@ -281,6 +280,16 @@ public class AbsensiMapelController {
             navigasiKe("/com/nurulislam/siap/fxml/LaporanMapel.fxml", "Laporan");
         } else {
             tampilkanBelumTersedia("Laporan");
+        }
+    }
+
+    /** Membuka halaman Profil Saya (diakses dari menu avatar kanan atas). */
+    private void bukaProfil() {
+        try {
+            SceneManager.switchTo("/com/nurulislam/siap/fxml/PengaturanAkun.fxml",
+                    Main.APP_TITLE + " - Profil Saya");
+        } catch (IOException e) {
+            System.err.println("[AbsensiMapelController] Gagal membuka Profil Saya: " + e.getMessage());
         }
     }
 

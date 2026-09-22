@@ -9,6 +9,7 @@ import com.nurulislam.siap.model.Pengguna;
 import com.nurulislam.siap.model.StatusAbsensi;
 import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
+import com.nurulislam.siap.util.ProfileMenu;
 import com.nurulislam.siap.util.DatabaseConnection;
 import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
@@ -33,7 +34,7 @@ import java.util.*;
 public class DashboardController {
     @FXML private Button btnNavDashboard, btnNavVerifikasi, btnNavScanQr, btnNavDataMurid,
             btnNavDataKelas, btnNavMataPelajaran, btnNavCetakKartu, btnNavLaporan;
-    @FXML private Hyperlink linkLogout;
+    @FXML private StackPane avatarBox;
     @FXML private Label labelTanggal, labelNamaUser, labelRoleUser, labelInisialUser, labelHalo;
     @FXML private Label labelTotalHadir, labelIzinSakit, labelTerlambat, labelAlfa;
     @FXML private Label labelStatusDatabase;
@@ -75,7 +76,7 @@ public class DashboardController {
         btnKonfigurasi.setOnAction(e -> bukaMataPelajaran());
         btnBacaSelengkapnya.setOnAction(e -> bukaLaporan());
         linkLihatSemua.setOnAction(e -> bukaLaporan());
-        linkLogout.setOnAction(e -> handleLogout());
+        ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
     }
 
     private void refreshDashboard() {
@@ -228,6 +229,16 @@ public class DashboardController {
         alert.setContentText("Akun Guru tidak memiliki hak akses ke halaman ini.");
         alert.showAndWait();
         return false;
+    }
+
+    /** Membuka halaman Profil Saya (diakses dari menu avatar kanan atas). */
+    private void bukaProfil() {
+        try {
+            SceneManager.switchTo("/com/nurulislam/siap/fxml/PengaturanAkun.fxml",
+                    Main.APP_TITLE + " - Profil Saya");
+        } catch (IOException e) {
+            System.err.println("[DashboardController] Gagal membuka Profil Saya: " + e.getMessage());
+        }
     }
 
     private void handleLogout() { SessionManager.logout(); buka("/com/nurulislam/siap/fxml/Login.fxml", "Masuk"); }

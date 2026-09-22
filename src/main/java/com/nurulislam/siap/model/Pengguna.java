@@ -14,6 +14,7 @@ public class Pengguna {
     private String nama;
     private Role role;
     private StatusAkun statusAkun;
+    private String foto; // path file foto profil, boleh null
     private LocalDateTime createdAt;
 
     public Pengguna() {
@@ -84,6 +85,14 @@ public class Pengguna {
 
     public void setStatusAkun(StatusAkun statusAkun) {
         this.statusAkun = statusAkun;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     public LocalDateTime getCreatedAt() {
