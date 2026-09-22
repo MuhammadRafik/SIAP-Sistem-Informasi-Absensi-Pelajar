@@ -262,8 +262,8 @@ public class VerifikasiAkunController {
 
             {
                 box.setAlignment(Pos.CENTER);
-                btnA.setStyle("-fx-font-size: 11px; -fx-padding: 6 9;");
-                btnB.setStyle("-fx-font-size: 11px; -fx-padding: 6 9;");
+                btnA.getStyleClass().add("tabel-btn");
+                btnB.getStyleClass().add("tabel-btn");
             }
 
             private Pengguna barisIni() {
@@ -272,6 +272,13 @@ public class VerifikasiAkunController {
                     return null;
                 }
                 return getTableView().getItems().get(idx);
+            }
+
+            private void gaya(Button tombol, String teks, boolean primer, Runnable aksi) {
+                tombol.setText(teks);
+                tombol.getStyleClass().removeAll("tabel-btn-primer", "tabel-btn-danger");
+                tombol.getStyleClass().add(primer ? "tabel-btn-primer" : "tabel-btn-danger");
+                tombol.setOnAction(e -> aksi.run());
             }
 
             @Override
@@ -288,22 +295,17 @@ public class VerifikasiAkunController {
                 }
                 box.getChildren().clear();
                 if (filterStatusAktif == StatusAkun.MENUNGGU_VERIFIKASI) {
-                    btnA.setText("Verifikasi");
-                    btnA.setStyle("-fx-font-size: 11px; -fx-padding: 6 9; -fx-background-color: #006a65; -fx-text-fill: white; -fx-font-weight: bold;");
-                    btnA.setOnAction(e -> verifikasiAkun(row));
-                    btnB.setText("Tolak");
-                    btnB.setStyle("-fx-font-size: 11px; -fx-padding: 6 9; -fx-background-color: #d64545; -fx-text-fill: white; -fx-font-weight: bold;");
-                    btnB.setOnAction(e -> tolakAkun(row));
+                    final Pengguna target = row;
+                    gaya(btnA, "Verifikasi", true, () -> verifikasiAkun(target));
+                    gaya(btnB, "Tolak", false, () -> tolakAkun(target));
                     box.getChildren().addAll(btnA, btnB);
                 } else if (filterStatusAktif == StatusAkun.AKTIF) {
-                    btnA.setText("Nonaktifkan");
-                    btnA.setStyle("-fx-font-size: 11px; -fx-padding: 6 9; -fx-background-color: #d64545; -fx-text-fill: white; -fx-font-weight: bold;");
-                    btnA.setOnAction(e -> nonaktifkanAkun(row));
+                    final Pengguna target = row;
+                    gaya(btnA, "Nonaktifkan", false, () -> nonaktifkanAkun(target));
                     box.getChildren().add(btnA);
                 } else {
-                    btnA.setText("Aktifkan");
-                    btnA.setStyle("-fx-font-size: 11px; -fx-padding: 6 9; -fx-background-color: #006a65; -fx-text-fill: white; -fx-font-weight: bold;");
-                    btnA.setOnAction(e -> aktifkanAkun(row));
+                    final Pengguna target = row;
+                    gaya(btnA, "Aktifkan", true, () -> aktifkanAkun(target));
                     box.getChildren().add(btnA);
                 }
                 setGraphic(box);

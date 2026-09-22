@@ -82,23 +82,26 @@
                     </StackPane>
                 </HBox>
 
-                <!-- Baris 1: tab status + muat ulang -->
-                <HBox spacing="8" styleClass="filter-tab-group" alignment="CENTER_LEFT">
-                    <ToggleButton fx:id="tabStatusMenunggu" text="Menunggu Verifikasi" styleClass="filter-tab, filter-tab-active"/>
-                    <ToggleButton fx:id="tabStatusTerverifikasi" text="Terverifikasi" styleClass="filter-tab"/>
-                    <ToggleButton fx:id="tabStatusNonaktif" text="Nonaktif" styleClass="filter-tab"/>
-                    <Region HBox.hgrow="ALWAYS"/>
-                    <Button fx:id="btnRefresh" text="Muat Ulang" styleClass="btn-secondary"/>
-                </HBox>
+                <!-- Blok toolbar: 2 baris tombol sejajar -->
+                <VBox spacing="10">
+                    <!-- Baris 1: tab status + muat ulang -->
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <ToggleButton fx:id="tabStatusMenunggu" text="Menunggu Verifikasi" styleClass="filter-tab, filter-tab-active"/>
+                        <ToggleButton fx:id="tabStatusTerverifikasi" text="Terverifikasi" styleClass="filter-tab"/>
+                        <ToggleButton fx:id="tabStatusNonaktif" text="Nonaktif" styleClass="filter-tab"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnRefresh" text="Muat Ulang" styleClass="filter-tab"/>
+                    </HBox>
 
-                <!-- Baris 2: filter peran + jumlah -->
-                <HBox spacing="8" styleClass="filter-tab-group">
-                    <ToggleButton fx:id="tabSemua" text="Semua" styleClass="filter-tab, filter-tab-active"/>
-                    <ToggleButton fx:id="tabGuru" text="Guru Mata Pelajaran" styleClass="filter-tab"/>
-                    <ToggleButton fx:id="tabTU" text="Staf TU" styleClass="filter-tab"/>
-                    <Region HBox.hgrow="ALWAYS"/>
-                    <Label fx:id="labelJumlah" text="0 akun menunggu" styleClass="card-subtitle"/>
-                </HBox>
+                    <!-- Baris 2: filter peran + jumlah -->
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <ToggleButton fx:id="tabSemua" text="Semua" styleClass="filter-tab, filter-tab-active"/>
+                        <ToggleButton fx:id="tabGuru" text="Guru Mata Pelajaran" styleClass="filter-tab"/>
+                        <ToggleButton fx:id="tabTU" text="Staf TU" styleClass="filter-tab"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="labelJumlah" text="0 akun menunggu" styleClass="card-subtitle"/>
+                    </HBox>
+                </VBox>
 
                 <Label fx:id="errorLabel" styleClass="error-label" wrapText="true"/>
 

@@ -577,6 +577,33 @@
     -fx-border-color: #006a65;
 }
 
+/* Tombol aksi kecil di dalam baris tabel: versi soft agar tidak menyala. */
+.tabel-btn {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 6 10 6 10;
+    -fx-cursor: hand;
+}
+
+.tabel-btn-primer {
+    -fx-background-color: #e0f6f4;
+    -fx-text-fill: #006a65;
+}
+
+.tabel-btn-primer:hover {
+    -fx-background-color: #c9efec;
+}
+
+.tabel-btn-danger {
+    -fx-background-color: #ffe3e0;
+    -fx-text-fill: #a93429;
+}
+
+.tabel-btn-danger:hover {
+    -fx-background-color: #ffd2cd;
+}
+
 /* ===================== Halaman Scan QR ===================== */
 
 .scanqr-camera-frame {

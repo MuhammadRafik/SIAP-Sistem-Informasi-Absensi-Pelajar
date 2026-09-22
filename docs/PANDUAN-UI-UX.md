@@ -66,6 +66,8 @@ oranye `#ffe9df`, merah `#ffdad6`.
   `fill` mengikuti warna kartu (teal `#006a65`, oranye `#a43c12`,
   merah `#ba1a1a`) — dilarang memakai glyph font/emoji agar tajam dan
   selalu center di kotak 34px.
+- Aksi per-baris tabel: `tabel-btn-primer` (soft teal) / `tabel-btn-danger`
+  (soft merah) — tanpa style inline, tanpa merah solid menyala.
 
 ## 7. Halaman baru (checklist)
 
