@@ -101,7 +101,7 @@ public class DataKelasDetailController {
             FXCollections.observableArrayList();
 
     private static final DateTimeFormatter FORMAT_TANGGAL =
-            DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            DateTimeFormatter.ofPattern("dd MMM yyyy");
     private boolean subKelasTerbuka = true;
 
     @FXML

@@ -73,7 +73,7 @@ import javafx.scene.layout.HBox;
 public class LaporanKehadiranController {
 
     private static final DateTimeFormatter FORMAT_TANGGAL = DateTimeFormatter.ofPattern("dd MMM yyyy");
-    private static final DateTimeFormatter FORMAT_JAM = DateTimeFormatter.ofPattern("HH.mm");
+    private static final DateTimeFormatter FORMAT_JAM = DateTimeFormatter.ofPattern("HH:mm");
 
     // --- Sidebar ---
     @FXML private Button btnNavDashboard;

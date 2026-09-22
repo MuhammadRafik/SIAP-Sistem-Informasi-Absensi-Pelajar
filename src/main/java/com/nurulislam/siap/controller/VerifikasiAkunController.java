@@ -76,7 +76,7 @@ public class VerifikasiAkunController {
     @FXML private Button btnAktifkanKembali;
     @FXML private Button btnRefresh;
 
-    private static final DateTimeFormatter FORMAT_TANGGAL = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    private static final DateTimeFormatter FORMAT_TANGGAL = DateTimeFormatter.ofPattern("dd MMM yyyy HH:mm");
 
     private final PenggunaDAO penggunaDAO = new PenggunaDAO();
 
