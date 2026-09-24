@@ -9,9 +9,11 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -123,35 +125,15 @@
                         <Label text="Tampilan kartu pelajar siap cetak" styleClass="card-subtitle"/>
                     </VBox>
 
-                    <!-- ===== Kartu pelajar (juga dipakai langsung sebagai sumber cetak/ekspor) ===== -->
-                    <VBox fx:id="kartuPratinjau" styleClass="kartu-pelajar" prefWidth="320" maxWidth="320" spacing="0">
-                        <VBox styleClass="kartu-pelajar-header" spacing="1" alignment="CENTER">
-                            <padding>
-                                <Insets top="10" bottom="10"/>
-                            </padding>
-                            <Label text="MA NURUL ISLAM" styleClass="kartu-pelajar-title"/>
-                            <Label text="KARTU PELAJAR" styleClass="kartu-pelajar-subtitle"/>
-                        </VBox>
+                    <!-- Toggle sisi + pratinjau kartu (sumber cetak/ekspor dibangun di kode) -->
+                    <HBox spacing="8" alignment="CENTER">
+                        <ToggleButton fx:id="tabKartuDepan" text="Depan" styleClass="filter-tab, filter-tab-active"/>
+                        <ToggleButton fx:id="tabKartuBelakang" text="Belakang" styleClass="filter-tab"/>
+                    </HBox>
 
-                        <HBox spacing="14" alignment="CENTER_LEFT">
-                            <padding>
-                                <Insets top="16" right="16" bottom="16" left="16"/>
-                            </padding>
-
-                            <StackPane styleClass="foto-murid-frame" style="-fx-min-width:76;-fx-min-height:76;-fx-max-width:76;-fx-max-height:76;">
-                                <ImageView fx:id="imageViewFotoKartu" fitWidth="76" fitHeight="76" preserveRatio="true"/>
-                            </StackPane>
-
-                            <VBox spacing="4" HBox.hgrow="ALWAYS">
-                                <Label fx:id="labelNamaKartu" text="Nama Murid" styleClass="kartu-pelajar-nama" wrapText="true"/>
-                                <Label fx:id="labelNisKartu" text="NIS: -" styleClass="kartu-pelajar-detail"/>
-                                <Label fx:id="labelKelasKartu" text="Kelas: -" styleClass="kartu-pelajar-detail"/>
-                            </VBox>
-
-                            <ImageView fx:id="imageViewQrKartu" fitWidth="64" fitHeight="64" preserveRatio="true"/>
-                        </HBox>
-                    </VBox>
-                    <!-- ===== akhir kartu pelajar ===== -->
+                    <Pane fx:id="previewHolder" prefWidth="297" prefHeight="187"
+                          minWidth="297" minHeight="187" maxWidth="297" maxHeight="187"/>
+                    <!-- ===== akhir pratinjau kartu ===== -->
 
                     <VBox spacing="10">
                         <Button fx:id="btnCetak" text="Cetak" styleClass="btn-primary" maxWidth="Infinity" disable="true"/>

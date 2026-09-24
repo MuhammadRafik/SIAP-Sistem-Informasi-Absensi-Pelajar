@@ -1,13 +1,15 @@
 package com.nurulislam.siap.controller;
 
-import com.google.zxing.WriterException;
 import com.nurulislam.siap.app.Main;
 import com.nurulislam.siap.dao.KelasDAO;
 import com.nurulislam.siap.dao.MuridDAO;
+import com.nurulislam.siap.dao.TahunAjaranDAO;
 import com.nurulislam.siap.model.Kelas;
 import com.nurulislam.siap.model.Murid;
 import com.nurulislam.siap.model.Pengguna;
 import com.nurulislam.siap.model.Role;
+import com.nurulislam.siap.model.TahunAjaran;
+import com.nurulislam.siap.util.KartuPelajarView;
 import com.nurulislam.siap.util.QrCodeUtil;
 import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
@@ -26,7 +28,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.transform.Scale;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.util.StringConverter;
@@ -38,7 +42,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Controller halaman "Cetak Kartu Pelajar", khusus Staf TU.
@@ -55,8 +62,6 @@ import java.util.List;
  * gambar langsung tanpa perlu dialog printer.
  */
 public class ManajemenCetakKartuController {
-
-    private static final int UKURAN_QR_PX = 240;
 
     // --- Sidebar ---
     @FXML private Button btnNavDashboard;
@@ -90,20 +95,25 @@ public class ManajemenCetakKartuController {
     @FXML private Button btnRegenerateToken;
 
     // --- Pratinjau kartu ---
-    @FXML private VBox kartuPratinjau;
-    @FXML private ImageView imageViewFotoKartu;
-    @FXML private Label labelNamaKartu;
-    @FXML private Label labelNisKartu;
-    @FXML private Label labelKelasKartu;
-    @FXML private ImageView imageViewQrKartu;
+    @FXML private ToggleButton tabKartuDepan;
+    @FXML private ToggleButton tabKartuBelakang;
+    @FXML private Pane previewHolder;
 
     private final MuridDAO muridDAO = new MuridDAO();
     private final KelasDAO kelasDAO = new KelasDAO();
+    private final TahunAjaranDAO tahunAjaranDAO = new TahunAjaranDAO();
 
     private final ObservableList<Murid> semuaMurid = FXCollections.observableArrayList();
     private final ObservableList<Murid> daftarTampil = FXCollections.observableArrayList();
 
-    private static final String PLACEHOLDER_FOTO = "/com/nurulislam/siap/images/placeholder-foto.png";
+    /** Kartu sisi depan & belakang milik murid yang sedang dipratinjau. */
+    private Pane kartuDepan;
+    private Pane kartuBelakang;
+    private ToggleGroup grupKartu;
+    private Image logoResmi;
+
+    private static final DateTimeFormatter FORMAT_TTL =
+            DateTimeFormatter.ofPattern("d MMM yyyy", new Locale("id", "ID"));
 
     @FXML
     public void initialize() {
@@ -114,6 +124,8 @@ public class ManajemenCetakKartuController {
         siapkanSidebar();
         siapkanFilter();
         siapkanTabel();
+        siapkanPratinjauKartu();
+        logoResmi = KartuPelajarView.muatLogoResmi();
 
         fieldPencarian.textProperty().addListener((obs, lama, baru) -> terapkanFilter());
         comboFilterKelas.valueProperty().addListener((obs, lama, baru) -> terapkanFilter());
@@ -257,6 +269,54 @@ public class ManajemenCetakKartuController {
 
     // ================= Pratinjau kartu =================
 
+    private void siapkanPratinjauKartu() {
+        grupKartu = new ToggleGroup();
+        tabKartuDepan.setToggleGroup(grupKartu);
+        tabKartuBelakang.setToggleGroup(grupKartu);
+        tabKartuDepan.setSelected(true);
+        grupKartu.selectedToggleProperty().addListener((obs, lama, baru) -> {
+            if (baru == null) {
+                grupKartu.selectToggle(lama != null ? lama : tabKartuDepan);
+                return;
+            }
+            perbaruiGayaTabKartu();
+            tampilkanSisiAktif();
+        });
+        perbaruiGayaTabKartu();
+    }
+
+    private void perbaruiGayaTabKartu() {
+        for (ToggleButton tab : List.of(tabKartuDepan, tabKartuBelakang)) {
+            tab.getStyleClass().remove("filter-tab-active");
+            if (tab.isSelected()) {
+                tab.getStyleClass().add("filter-tab-active");
+            }
+        }
+    }
+
+    /** Menampilkan sisi kartu (depan/belakang) sesuai toggle aktif. */
+    private void tampilkanSisiAktif() {
+        previewHolder.getChildren().clear();
+        Pane sisi = grupKartu.getSelectedToggle() == tabKartuBelakang ? kartuBelakang : kartuDepan;
+        if (sisi == null) {
+            Label kosong = new Label("Pilih murid di tabel");
+            kosong.setStyle("-fx-font-size: 12px; -fx-text-fill: #6b7076;");
+            kosong.setLayoutX(85);
+            kosong.setLayoutY(84);
+            previewHolder.getChildren().add(kosong);
+            return;
+        }
+        // Skala pivot (0,0) agar kartu pas mengisi holder 297x187.
+        sisi.getTransforms().clear();
+        sisi.getTransforms().add(new Scale(
+                KartuPelajarView.SKALA_PRATINJAU, KartuPelajarView.SKALA_PRATINJAU, 0, 0));
+        previewHolder.getChildren().add(sisi);
+    }
+
+    /** Pasangan kartu depan-belakang yang baru dibangun (belum diskala). */
+    private record Kartu(Pane depan, Pane belakang) {
+    }
+
     private void perbaruiSetelahSeleksiBerubah() {
         List<Murid> terpilih = tabelMurid.getSelectionModel().getSelectedItems();
         labelJumlahTerpilih.setText(terpilih.size() + " murid terpilih");
@@ -277,11 +337,9 @@ public class ManajemenCetakKartuController {
     }
 
     private void tampilkanKartuKosong() {
-        labelNamaKartu.setText("Pilih murid di tabel");
-        labelNisKartu.setText("NIS: -");
-        labelKelasKartu.setText("Kelas: -");
-        imageViewQrKartu.setImage(null);
-        tampilkanFotoKartu(null);
+        kartuDepan = null;
+        kartuBelakang = null;
+        tampilkanSisiAktif();
         btnCetak.setDisable(true);
         btnSimpanPng.setDisable(true);
         btnRegenerateToken.setDisable(true);
@@ -289,33 +347,64 @@ public class ManajemenCetakKartuController {
     }
 
     private void tampilkanKartu(Murid murid) {
-        labelNamaKartu.setText(murid.getNama());
-        labelNisKartu.setText("NIS: " + murid.getNis());
-        labelKelasKartu.setText("Kelas: " + (murid.getNamaKelas() != null ? murid.getNamaKelas() : "-"));
-        tampilkanFotoKartu(murid.getFoto());
-
         try {
-            imageViewQrKartu.setImage(QrCodeUtil.buatGambarQr(murid.getQrToken(), UKURAN_QR_PX));
-        } catch (WriterException e) {
-            imageViewQrKartu.setImage(null);
-            System.err.println("[ManajemenCetakKartuController] Gagal membuat QR: " + e.getMessage());
+            Kartu kartu = bangunKartu(murid);
+            kartuDepan = kartu.depan();
+            kartuBelakang = kartu.belakang();
+            tampilkanSisiAktif();
+        } catch (Exception e) {
+            errorLabel.setText("Gagal membuat pratinjau kartu untuk " + murid.getNama() + ".");
+            System.err.println("[ManajemenCetakKartuController] Gagal bangun kartu: " + e.getMessage());
         }
     }
 
-    private void tampilkanFotoKartu(String path) {
+    /**
+     * Membangun pasangan kartu depan-belakang dari data murid + foto + QR.
+     * Dipakai pratinjau, cetak, dan ekspor PNG (selalu instance baru).
+     */
+    private Kartu bangunKartu(Murid murid) throws Exception {
+        String nama = murid.getNama() != null ? murid.getNama() : "-";
+        String nis = murid.getNis() != null ? murid.getNis() : "-";
+        String ttl = murid.getTanggalLahir() != null
+                ? murid.getTanggalLahir().format(FORMAT_TTL) : "-";
+
+        String jurusan = "-";
+        String tahunMasuk = "-";
+        try {
+            Optional<Kelas> kelas = kelasDAO.findById(murid.getKelasId());
+            if (kelas.isPresent()) {
+                if (kelas.get().getJurusan() != null && !kelas.get().getJurusan().isBlank()) {
+                    jurusan = kelas.get().getJurusan();
+                }
+                Optional<TahunAjaran> tahun = tahunAjaranDAO.findById(kelas.get().getTahunAjaranId());
+                if (tahun.isPresent() && tahun.get().getTahun() != null) {
+                    tahunMasuk = tahun.get().getTahun().split("/")[0];
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("[ManajemenCetakKartuController] Gagal muat kelas/tahun: " + e.getMessage());
+        }
+
+        Image foto = muatFotoMurid(murid.getFoto());
+        Image qr = QrCodeUtil.buatGambarQr(murid.getQrToken(), 300);
+
+        Pane depan = KartuPelajarView.buatDepan(nama, nis, ttl, jurusan, tahunMasuk, foto, logoResmi);
+        Pane belakang = KartuPelajarView.buatBelakang(qr, logoResmi);
+        return new Kartu(depan, belakang);
+    }
+
+    private Image muatFotoMurid(String path) {
         try {
             if (path != null && !path.isBlank() && Files.exists(Paths.get(path))) {
                 BufferedImage buffered = ImageIO.read(new File(path));
                 if (buffered != null) {
-                    imageViewFotoKartu.setImage(SwingFXUtils.toFXImage(buffered, null));
-                    return;
+                    return SwingFXUtils.toFXImage(buffered, null);
                 }
             }
         } catch (IOException e) {
             System.err.println("[ManajemenCetakKartuController] Gagal memuat foto: " + e.getMessage());
         }
-        java.io.InputStream placeholder = getClass().getResourceAsStream(PLACEHOLDER_FOTO);
-        imageViewFotoKartu.setImage(placeholder != null ? new Image(placeholder) : null);
+        return null;
     }
 
     // ================= Cetak & ekspor =================
@@ -342,14 +431,14 @@ public class ManajemenCetakKartuController {
 
         try {
             for (Murid murid : terpilih) {
-                tampilkanKartu(murid);
-                // applyCss() + layout() WAJIB dipanggil manual di sini: kartu ini bagian dari
-                // scene yang sedang tampil, tapi perubahan teks/gambar di atas belum tentu
-                // "kepakai" secara visual sebelum frame render berikutnya. Tanpa baris ini,
-                // hasil cetak bisa memuat data murid SEBELUMNYA (frame lama).
-                kartuPratinjau.applyCss();
-                kartuPratinjau.layout();
-                job.printPage(layout, kartuPratinjau);
+                try {
+                    Kartu kartu = bangunKartu(murid);
+                    cetakSisi(job, layout, kartu.depan());
+                    cetakSisi(job, layout, kartu.belakang());
+                } catch (Exception e) {
+                    System.err.println("[ManajemenCetakKartuController] Lewati " + murid.getNama()
+                            + ": " + e.getMessage());
+                }
             }
             job.endJob();
             errorLabel.setText("");
@@ -362,6 +451,13 @@ public class ManajemenCetakKartuController {
                 tampilkanKartu(terpilih.get(0));
             }
         }
+    }
+
+    /** Mencetak satu sisi kartu (node baru, ukuran penuh, depan maupun belakang). */
+    private void cetakSisi(PrinterJob job, PageLayout layout, Pane sisi) {
+        sisi.applyCss();
+        sisi.layout();
+        job.printPage(layout, sisi);
     }
 
     private void handleSimpanPng() {
@@ -378,18 +474,15 @@ public class ManajemenCetakKartuController {
         }
 
         int berhasil = 0;
+        String dasarNama = "";
         for (Murid murid : terpilih) {
             try {
-                tampilkanKartu(murid);
-                kartuPratinjau.applyCss();
-                kartuPratinjau.layout();
-
-                Image snapshot = kartuPratinjau.snapshot(new javafx.scene.SnapshotParameters(), null);
-                BufferedImage buffered = SwingFXUtils.fromFXImage(snapshot, null);
-                String namaFile = murid.getNis() + "_" + slugify(murid.getNama()) + ".png";
-                ImageIO.write(buffered, "PNG", new File(folderTujuan, namaFile));
+                Kartu kartu = bangunKartu(murid);
+                dasarNama = murid.getNis() + "_" + slugify(murid.getNama());
+                simpanPng(kartu.depan(), new File(folderTujuan, dasarNama + "_depan.png"));
+                simpanPng(kartu.belakang(), new File(folderTujuan, dasarNama + "_belakang.png"));
                 berhasil++;
-            } catch (IOException e) {
+            } catch (Exception e) {
                 System.err.println("[ManajemenCetakKartuController] Gagal simpan PNG untuk "
                         + murid.getNama() + ": " + e.getMessage());
             }
@@ -405,6 +498,17 @@ public class ManajemenCetakKartuController {
         info.setContentText(berhasil + " dari " + terpilih.size() + " kartu berhasil disimpan ke:\n"
                 + folderTujuan.getAbsolutePath());
         info.showAndWait();
+    }
+
+    /** Snapshot satu sisi kartu (node baru) ke file PNG. */
+    private void simpanPng(Pane sisi, File tujuan) throws IOException {
+        // Node dibangun baru khusus ekspor (tidak tampil di scene) sehingga
+        // applyCss() + layout() wajib manual sebelum snapshot.
+        sisi.applyCss();
+        sisi.layout();
+        Image snapshot = sisi.snapshot(new javafx.scene.SnapshotParameters(), null);
+        BufferedImage buffered = SwingFXUtils.fromFXImage(snapshot, null);
+        ImageIO.write(buffered, "PNG", tujuan);
     }
 
     private void handleRegenerateToken() {
