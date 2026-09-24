@@ -230,21 +230,6 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 0);
 }
 
-.brand-icon {
-    -fx-background-color: #006a65;
-    -fx-background-radius: 8;
-    -fx-min-width: 40;
-    -fx-min-height: 40;
-    -fx-max-width: 40;
-    -fx-max-height: 40;
-}
-
-.brand-icon-text {
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 18px;
-}
-
 .sidebar-brand {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
