@@ -17,6 +17,7 @@ import com.nurulislam.siap.util.SessionManager;
 import com.nurulislam.siap.util.PdfExportUtil;
 import com.nurulislam.siap.util.ProfileMenu;
 import com.nurulislam.siap.util.AvatarUtil;
+import com.nurulislam.siap.util.BrandLogo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -86,6 +87,7 @@ public class LaporanKehadiranController {
     @FXML private Button btnNavLaporan;
     @FXML private StackPane avatarBox;
     @FXML private ImageView imgAvatar;
+    @FXML private ImageView imgLogo;
 
     // --- Top bar ---
     @FXML private Label labelNamaUser;
@@ -170,6 +172,7 @@ public class LaporanKehadiranController {
         btnEksporPdf.setOnAction(e -> handleEksporPdf());
         ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
         AvatarUtil.tampilkan(avatarBox, imgAvatar, labelInisialUser);
+        BrandLogo.pasang(imgLogo);
 
         muatDaftarKelasFilter();
         muatDaftarMapelFilter();

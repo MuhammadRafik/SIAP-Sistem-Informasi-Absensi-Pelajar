@@ -11,6 +11,7 @@ import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
 import com.nurulislam.siap.util.ProfileMenu;
 import com.nurulislam.siap.util.AvatarUtil;
+import com.nurulislam.siap.util.BrandLogo;
 import com.nurulislam.siap.util.DatabaseConnection;
 import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
@@ -38,6 +39,7 @@ public class DashboardController {
             btnNavDataKelas, btnNavMataPelajaran, btnNavCetakKartu, btnNavLaporan;
     @FXML private StackPane avatarBox;
     @FXML private ImageView imgAvatar;
+    @FXML private ImageView imgLogo;
     @FXML private Label labelTanggal, labelNamaUser, labelRoleUser, labelInisialUser, labelHalo;
     @FXML private Label labelTotalHadir, labelIzinSakit, labelTerlambat, labelAlfa;
     @FXML private Label labelStatusDatabase;
@@ -81,6 +83,7 @@ public class DashboardController {
         linkLihatSemua.setOnAction(e -> bukaLaporan());
         ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
         AvatarUtil.tampilkan(avatarBox, imgAvatar, labelInisialUser);
+        BrandLogo.pasang(imgLogo);
     }
 
     private void refreshDashboard() {

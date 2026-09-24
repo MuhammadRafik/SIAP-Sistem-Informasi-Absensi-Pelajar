@@ -9,6 +9,7 @@ import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
 import com.nurulislam.siap.util.ProfileMenu;
 import com.nurulislam.siap.util.AvatarUtil;
+import com.nurulislam.siap.util.BrandLogo;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -50,6 +51,7 @@ public class JadwalGuruController {
     @FXML private Button btnNavLaporan;
     @FXML private StackPane avatarBox;
     @FXML private ImageView imgAvatar;
+    @FXML private ImageView imgLogo;
 
     @FXML private Label labelTanggal;
     @FXML private Label labelNamaUser;
@@ -267,6 +269,7 @@ public class JadwalGuruController {
 
         ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
         AvatarUtil.tampilkan(avatarBox, imgAvatar, labelInisialUser);
+        BrandLogo.pasang(imgLogo);
     }
 
     /** Membuka halaman Profil Saya (diakses dari menu avatar kanan atas). */

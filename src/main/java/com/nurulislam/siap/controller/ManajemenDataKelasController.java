@@ -13,6 +13,7 @@ import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
 import com.nurulislam.siap.util.ProfileMenu;
 import com.nurulislam.siap.util.AvatarUtil;
+import com.nurulislam.siap.util.BrandLogo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -58,6 +59,7 @@ public class ManajemenDataKelasController {
 
     @FXML private StackPane avatarBox;
     @FXML private ImageView imgAvatar;
+    @FXML private ImageView imgLogo;
 
     @FXML private Label labelNamaUser;
     @FXML private Label labelRoleUser;
@@ -135,6 +137,7 @@ public class ManajemenDataKelasController {
         btnBatal.setOnAction(e -> resetForm());
         ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
         AvatarUtil.tampilkan(avatarBox, imgAvatar, labelInisialUser);
+        BrandLogo.pasang(imgLogo);
 
         muatDaftarPendukung();
         muatDaftarKelas();

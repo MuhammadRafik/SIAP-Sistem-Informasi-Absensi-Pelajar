@@ -30,6 +30,7 @@ import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
 import com.nurulislam.siap.util.ProfileMenu;
 import com.nurulislam.siap.util.AvatarUtil;
+import com.nurulislam.siap.util.BrandLogo;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -93,6 +94,7 @@ public class ScanQrController {
     @FXML private Label labelStatusKamera;
     @FXML private StackPane avatarBox;
     @FXML private ImageView imgAvatar;
+    @FXML private ImageView imgLogo;
 
     // --- Top bar ---
     @FXML private Label labelTanggal;
@@ -233,6 +235,7 @@ public class ScanQrController {
         btnNavLaporan.setOnAction(e -> navigasiKe("/com/nurulislam/siap/fxml/LaporanKehadiran.fxml", "Laporan"));
         ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
         AvatarUtil.tampilkan(avatarBox, imgAvatar, labelInisialUser);
+        BrandLogo.pasang(imgLogo);
     }
 
     private void navigasiKe(String fxml, String judul) {

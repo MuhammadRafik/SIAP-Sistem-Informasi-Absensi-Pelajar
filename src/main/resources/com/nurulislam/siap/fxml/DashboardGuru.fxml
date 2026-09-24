@@ -31,7 +31,7 @@
                 <padding>
                     <Insets bottom="20" top="4"/>
                 </padding>
-<ImageView image="@../images/logo-siap.png" fitWidth="32" fitHeight="46" preserveRatio="true" smooth="true"/>
+<ImageView fx:id="imgLogo" fitWidth="32" fitHeight="46" preserveRatio="true" smooth="true"/>
                 <VBox spacing="1">
                     <Label text="SIAP" styleClass="sidebar-brand"/>
                     <Label text="Sistem Informasi Absensi Pelajar" styleClass="sidebar-brand-sub" wrapText="true"/>

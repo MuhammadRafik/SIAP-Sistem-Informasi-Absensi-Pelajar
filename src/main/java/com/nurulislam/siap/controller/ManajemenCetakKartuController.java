@@ -15,6 +15,7 @@ import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
 import com.nurulislam.siap.util.ProfileMenu;
 import com.nurulislam.siap.util.AvatarUtil;
+import com.nurulislam.siap.util.BrandLogo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -74,6 +75,7 @@ public class ManajemenCetakKartuController {
     @FXML private Button btnNavLaporan;
     @FXML private StackPane avatarBox;
     @FXML private ImageView imgAvatar;
+    @FXML private ImageView imgLogo;
 
     // --- Top bar ---
     @FXML private Label labelNamaUser;
@@ -143,6 +145,7 @@ public class ManajemenCetakKartuController {
         btnRegenerateToken.setOnAction(e -> handleRegenerateToken());
         ProfileMenu.pasang(avatarBox, this::bukaProfil, this::handleLogout);
         AvatarUtil.tampilkan(avatarBox, imgAvatar, labelInisialUser);
+        BrandLogo.pasang(imgLogo);
 
         muatDaftarKelasUntukFilter();
         muatDaftarMurid();
