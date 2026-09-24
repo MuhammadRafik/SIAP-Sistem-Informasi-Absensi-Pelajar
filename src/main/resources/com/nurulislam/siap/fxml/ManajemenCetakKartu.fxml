@@ -131,8 +131,8 @@
                         <ToggleButton fx:id="tabKartuBelakang" text="Belakang" styleClass="filter-tab"/>
                     </HBox>
 
-                    <Pane fx:id="previewHolder" prefWidth="297" prefHeight="187"
-                          minWidth="297" minHeight="187" maxWidth="297" maxHeight="187"/>
+                    <Pane fx:id="previewHolder" prefWidth="240" prefHeight="300"
+                          minWidth="240" minHeight="300" maxWidth="240" maxHeight="300"/>
                     <!-- ===== akhir pratinjau kartu ===== -->
 
                     <VBox spacing="10">

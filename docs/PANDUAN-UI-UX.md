@@ -68,8 +68,9 @@ oranye `#ffe9df`, merah `#ffdad6`.
   selalu center di kotak 34px.
 - Aksi per-baris tabel: `tabel-btn-primer` (soft teal) / `tabel-btn-danger`
   (soft merah) — tanpa style inline, tanpa merah solid menyala.
-- Kartu pelajar (`KartuPelajarView`, 560x353): logo resmi dibaca dari
-  `images/logo-ma.png` bila ada, jika tidak memakai emblem vektor.
+- Kartu pelajar (`KartuPelajarView`): template resmi `images/kartu-depan.png`
+  (815x980) & `kartu-belakang.png` (730x980) dipakai apa adanya; kode hanya
+  menempel foto + data + QR pada koordinat pas. `logo-ma.png` cadangan.
 
 ## 7. Halaman baru (checklist)
 

@@ -112,6 +112,10 @@ public class ManajemenCetakKartuController {
     private ToggleGroup grupKartu;
     private Image logoResmi;
 
+    /** Ukuran holder pratinjau di kolom kanan. */
+    private static final double PREVIEW_LEBAR = 240;
+    private static final double PREVIEW_TINGGI = 300;
+
     private static final DateTimeFormatter FORMAT_TTL =
             DateTimeFormatter.ofPattern("d MMM yyyy", new Locale("id", "ID"));
 
@@ -297,20 +301,30 @@ public class ManajemenCetakKartuController {
     /** Menampilkan sisi kartu (depan/belakang) sesuai toggle aktif. */
     private void tampilkanSisiAktif() {
         previewHolder.getChildren().clear();
-        Pane sisi = grupKartu.getSelectedToggle() == tabKartuBelakang ? kartuBelakang : kartuDepan;
+        boolean belakang = grupKartu.getSelectedToggle() == tabKartuBelakang;
+        Pane sisi = belakang ? kartuBelakang : kartuDepan;
+        double lebarAsli = belakang
+                ? KartuPelajarView.LEBAR_BELAKANG : KartuPelajarView.LEBAR_DEPAN;
+        double tinggiAsli = belakang
+                ? KartuPelajarView.TINGGI_BELAKANG : KartuPelajarView.TINGGI_DEPAN;
         if (sisi == null) {
             Label kosong = new Label("Pilih murid di tabel");
             kosong.setStyle("-fx-font-size: 12px; -fx-text-fill: #6b7076;");
-            kosong.setLayoutX(85);
-            kosong.setLayoutY(84);
+            kosong.setLayoutX(63);
+            kosong.setLayoutY(140);
             previewHolder.getChildren().add(kosong);
             return;
         }
-        // Skala pivot (0,0) agar kartu pas mengisi holder 297x187.
+        // Skala pas + tengahkan dalam holder.
+        double skala = Math.min(PREVIEW_LEBAR / lebarAsli, PREVIEW_TINGGI / tinggiAsli);
         sisi.getTransforms().clear();
-        sisi.getTransforms().add(new Scale(
-                KartuPelajarView.SKALA_PRATINJAU, KartuPelajarView.SKALA_PRATINJAU, 0, 0));
-        previewHolder.getChildren().add(sisi);
+        sisi.getTransforms().add(new Scale(skala, skala, 0, 0));
+        sisi.setLayoutX((PREVIEW_LEBAR - lebarAsli * skala) / 2);
+        sisi.setLayoutY((PREVIEW_TINGGI - tinggiAsli * skala) / 2);
+        Pane bungkus = new Pane();
+        bungkus.setPrefSize(PREVIEW_LEBAR, PREVIEW_TINGGI);
+        bungkus.getChildren().add(sisi);
+        previewHolder.getChildren().add(bungkus);
     }
 
     /** Pasangan kartu depan-belakang yang baru dibangun (belum diskala). */
@@ -427,7 +441,7 @@ public class ManajemenCetakKartuController {
         }
 
         Printer printer = job.getPrinter();
-        PageLayout layout = printer.createPageLayout(Paper.A5, PageOrientation.LANDSCAPE, Printer.MarginType.HARDWARE_MINIMUM);
+        PageLayout layout = printer.createPageLayout(Paper.A5, PageOrientation.PORTRAIT, Printer.MarginType.HARDWARE_MINIMUM);
 
         try {
             for (Murid murid : terpilih) {
@@ -453,11 +467,16 @@ public class ManajemenCetakKartuController {
         }
     }
 
-    /** Mencetak satu sisi kartu (node baru, ukuran penuh, depan maupun belakang). */
+    /** Mencetak satu sisi kartu (node baru) diskala pas area cetak. */
     private void cetakSisi(PrinterJob job, PageLayout layout, Pane sisi) {
-        sisi.applyCss();
-        sisi.layout();
-        job.printPage(layout, sisi);
+        double skala = Math.min(1.0, Math.min(
+                layout.getPrintableWidth() / sisi.getPrefWidth(),
+                layout.getPrintableHeight() / sisi.getPrefHeight()));
+        javafx.scene.Group bungkus = new javafx.scene.Group(sisi);
+        bungkus.getTransforms().add(new Scale(skala, skala, 0, 0));
+        bungkus.applyCss();
+        bungkus.layout();
+        job.printPage(layout, bungkus);
     }
 
     private void handleSimpanPng() {
