@@ -711,7 +711,14 @@ public class ScanQrController {
         return baris;
     }
 
-    private void tampilkanStatusKameraGagal(String string, String kamera_Library_OpenCV_bermasalah) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    private void tampilkanStatusKameraGagal(String overlay, String status) {
+        Platform.runLater(() -> {
+            labelKameraOverlay.setText(overlay);
+            labelChipKamera.setText("KAMERA TIDAK AKTIF");
+            if (!dotStatusKamera.getStyleClass().contains("scanqr-status-dot-off")) {
+                dotStatusKamera.getStyleClass().add("scanqr-status-dot-off");
+            }
+            labelStatusKamera.setText(status + ". Gunakan input NIS manual bila diperlukan.");
+        });
     }
 }

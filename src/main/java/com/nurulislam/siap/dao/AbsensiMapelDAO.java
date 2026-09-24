@@ -364,7 +364,28 @@ public class AbsensiMapelDAO {
         return a;
     }
 
+    /**
+     * Menghitung jumlah murid berstatus AKTIF pada kelas dari sebuah jadwal
+     * mengajar. Dipakai kartu rekap halaman Absensi Mata Pelajaran.
+     * Mengembalikan 0 bila jadwal tidak ditemukan atau database error
+     * (tidak melempar exception agar halaman tetap bisa dibuka).
+     */
     public int hitungJumlahSiswaAktifUntukJadwal(int jadwalId) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String sql = "SELECT COUNT(*) FROM tb_murid m "
+                + "JOIN tb_jadwal_mengajar j ON m.kelas_id = j.kelas_id "
+                + "WHERE j.jadwal_id = ? AND m.status = 'AKTIF'";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, jadwalId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("[AbsensiMapelDAO] Gagal hitung siswa aktif jadwal "
+                    + jadwalId + ": " + e.getMessage());
+        }
+        return 0;
     }
 }
