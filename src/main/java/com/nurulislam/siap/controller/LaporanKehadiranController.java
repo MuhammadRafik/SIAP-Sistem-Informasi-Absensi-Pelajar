@@ -14,6 +14,7 @@ import com.nurulislam.siap.model.Role;
 import com.nurulislam.siap.model.StatusAbsensi;
 import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.SessionManager;
+import com.nurulislam.siap.util.TanggalUtil;
 import com.nurulislam.siap.util.PdfExportUtil;
 import com.nurulislam.siap.util.ProfileMenu;
 import com.nurulislam.siap.util.AvatarUtil;
@@ -273,6 +274,8 @@ public class LaporanKehadiranController {
         LocalDate hariIni = LocalDate.now();
         datePickerMulai.setValue(hariIni.withDayOfMonth(1));
         datePickerAkhir.setValue(hariIni);
+        TanggalUtil.pasangFormatIndonesia(datePickerMulai);
+        TanggalUtil.pasangFormatIndonesia(datePickerAkhir);
 
         comboKelasFilter.setConverter(new StringConverter<>() {
             @Override

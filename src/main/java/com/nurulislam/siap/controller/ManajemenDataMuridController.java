@@ -10,6 +10,7 @@ import com.nurulislam.siap.model.Statusmurid;
 import com.nurulislam.siap.util.SceneManager;
 import com.nurulislam.siap.util.DatabaseConnection;
 import com.nurulislam.siap.util.SessionManager;
+import com.nurulislam.siap.util.TanggalUtil;
 import com.nurulislam.siap.util.ProfileMenu;
 import com.nurulislam.siap.util.AvatarUtil;
 import com.nurulislam.siap.util.BrandLogo;
@@ -156,6 +157,7 @@ public class ManajemenDataMuridController {
         siapkanSidebar();
         siapkanTabel();
         siapkanForm();
+        TanggalUtil.pasangFormatIndonesia(datePickerTanggalLahir);
 
         fieldPencarian.textProperty().addListener((obs, lama, baru) -> terapkanFilter());
 

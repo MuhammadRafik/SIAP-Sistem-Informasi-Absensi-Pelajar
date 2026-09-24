@@ -56,6 +56,7 @@ oranye `#ffe9df`, merah `#ffdad6`.
 - Tanggal: `dd MMM yyyy` (contoh: 22 Sep 2026).
 - Jam: `HH:mm`. Sapaan/tanggal panjang: `d MMMM yyyy` locale `id-ID`.
 - Input jam manual tetap memakai `HH.mm` sesuai hint di dialognya.
+- DatePicker selalu lewat `TanggalUtil` (`dd-MM-yyyy`, prompt `tt-bb-tttt`).
 
 ## 6. Polish global (otomatis via `style.css`)
 
